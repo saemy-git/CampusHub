@@ -37,6 +37,17 @@ function getDB() {
 function initSchema() {
   const schemaSql = fs.readFileSync(SCHEMA_PATH, 'utf-8');
   db.exec(schemaSql);
+
+  // Safe migration for updated_at column if missing in older existing database files
+  try {
+    const userColumns = db.prepare("PRAGMA table_info(users)").all();
+    const hasUpdatedAt = userColumns.some(col => col.name === 'updated_at');
+    if (!hasUpdatedAt) {
+      db.exec('ALTER TABLE users ADD COLUMN updated_at DATETIME;');
+    }
+  } catch (e) {
+    // Ignore migration error
+  }
 }
 
 function seedData() {
@@ -54,8 +65,21 @@ function getUser(id = 'user-01') {
   return {
     ...row,
     isVerified: Boolean(row.is_verified),
-    skills: row.skills ? JSON.parse(row.skills) : [],
-    interests: row.interests ? JSON.parse(row.interests) : []
+    skills: row.skills ? (typeof row.skills === 'string' ? JSON.parse(row.skills) : row.skills) : [],
+    interests: row.interests ? (typeof row.interests === 'string' ? JSON.parse(row.interests) : row.interests) : []
+  };
+}
+
+function getUserByEmail(email) {
+  if (!email) return null;
+  const database = getDB();
+  const row = database.prepare('SELECT * FROM users WHERE LOWER(email) = LOWER(?)').get(email.trim());
+  if (!row) return null;
+  return {
+    ...row,
+    isVerified: Boolean(row.is_verified),
+    skills: row.skills ? (typeof row.skills === 'string' ? JSON.parse(row.skills) : row.skills) : [],
+    interests: row.interests ? (typeof row.interests === 'string' ? JSON.parse(row.interests) : row.interests) : []
   };
 }
 
@@ -73,14 +97,82 @@ function updateUser(id = 'user-01', updates = {}) {
   const interests = updates.interests ? JSON.stringify(updates.interests) : JSON.stringify(current.interests);
   const avatar = updates.avatar || current.avatar;
   const xp = updates.xp !== undefined ? updates.xp : current.xp;
+  const isVerified = updates.isVerified !== undefined ? (updates.isVerified ? 1 : 0) : (current.isVerified ? 1 : 0);
 
   database.prepare(`
     UPDATE users 
-    SET name = ?, college = ?, department = ?, year = ?, bio = ?, skills = ?, interests = ?, avatar = ?, xp = ?
+    SET name = ?, college = ?, department = ?, year = ?, bio = ?, skills = ?, interests = ?, avatar = ?, xp = ?, is_verified = ?, updated_at = CURRENT_TIMESTAMP
     WHERE id = ?
-  `).run(name, college, department, year, bio, skills, interests, avatar, xp, id);
+  `).run(name, college, department, year, bio, skills, interests, avatar, xp, isVerified, id);
 
   return getUser(id);
+}
+
+function createOrUpdateUser(userData = {}) {
+  const database = getDB();
+  const email = (userData.email || '').toLowerCase().trim();
+  if (!email) throw new Error('Email is required');
+
+  const existing = getUserByEmail(email);
+  if (existing) {
+    return updateUser(existing.id, userData);
+  } else {
+    const id = userData.id || `user-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
+    const name = userData.name || email.split('@')[0].replace(/[._-]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    const college = userData.college || 'CGC Landran';
+    const department = userData.department || 'Computer Science Engineering';
+    const year = userData.year || '3rd Year';
+    const bio = userData.bio || 'Passionate student builder on CampusHub.';
+    const skills = JSON.stringify(userData.skills || ['Python', 'React.js', 'FastAPI']);
+    const interests = JSON.stringify(userData.interests || ['AI / ML', 'Fullstack', 'Hackathons']);
+    const avatar = userData.avatar || `https://api.dicebear.com/7.x/identicon/svg?seed=${encodeURIComponent(name)}`;
+    const isVerified = userData.isVerified !== undefined ? (userData.isVerified ? 1 : 0) : 1;
+    const xp = userData.xp || 2450;
+
+    database.prepare(`
+      INSERT INTO users (id, name, college, department, year, email, is_verified, bio, skills, interests, avatar, xp)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `).run(id, name, college, department, year, email, isVerified, bio, skills, interests, avatar, xp);
+
+    return getUser(id);
+  }
+}
+
+// -------------------------------------------------------------
+// EMAIL OTP OPERATIONS
+// -------------------------------------------------------------
+function saveEmailOtp(email, otpHash, expiresAt, lastSentAt = Date.now()) {
+  const database = getDB();
+  const normalizedEmail = email.toLowerCase().trim();
+  // Invalidate any existing OTPs for this email
+  database.prepare('DELETE FROM email_otps WHERE LOWER(email) = LOWER(?)').run(normalizedEmail);
+
+  const createdAt = Date.now();
+  database.prepare(`
+    INSERT INTO email_otps (email, otp_hash, expires_at, attempts, created_at, last_sent_at)
+    VALUES (?, ?, ?, 0, ?, ?)
+  `).run(normalizedEmail, otpHash, expiresAt, createdAt, lastSentAt);
+}
+
+function getActiveOtp(email) {
+  if (!email) return null;
+  const database = getDB();
+  const normalizedEmail = email.toLowerCase().trim();
+  return database.prepare('SELECT * FROM email_otps WHERE LOWER(email) = LOWER(?)').get(normalizedEmail);
+}
+
+function incrementOtpAttempts(email) {
+  if (!email) return;
+  const database = getDB();
+  const normalizedEmail = email.toLowerCase().trim();
+  database.prepare('UPDATE email_otps SET attempts = attempts + 1 WHERE LOWER(email) = LOWER(?)').run(normalizedEmail);
+}
+
+function deleteEmailOtp(email) {
+  if (!email) return;
+  const database = getDB();
+  const normalizedEmail = email.toLowerCase().trim();
+  database.prepare('DELETE FROM email_otps WHERE LOWER(email) = LOWER(?)').run(normalizedEmail);
 }
 
 // -------------------------------------------------------------
@@ -554,7 +646,13 @@ function resetAndSeed() {
 module.exports = {
   getDB,
   getUser,
+  getUserByEmail,
   updateUser,
+  createOrUpdateUser,
+  saveEmailOtp,
+  getActiveOtp,
+  incrementOtpAttempts,
+  deleteEmailOtp,
   getRoadmaps,
   getTeams,
   getTeamById,

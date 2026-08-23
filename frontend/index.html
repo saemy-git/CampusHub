@@ -74,29 +74,22 @@
       <!-- SCREEN 3: LOGIN -->
       <div class="onboarding-step" id="onboarding-step-3" data-step="3">
         <div class="login-content">
-          <div class="sticker-tag rotate-left mb-2">🔑 VERIFIED PORTAL</div>
+          <div class="sticker-tag rotate-left mb-2">🔑 PASSWORDLESS LOGIN</div>
           <h2 class="step-heading">Student Login</h2>
-          <p class="step-subheading">Access your campus build network.</p>
+          <p class="step-subheading">Enter your registered college email to receive a secure login code.</p>
           
           <form class="onboarding-form mt-4" id="login-form" onsubmit="handleLoginSubmit(event)">
             <div class="form-group">
-              <label class="form-label">College Email</label>
+              <label class="form-label">Official College Email</label>
               <input type="email" class="form-input" id="login-email" placeholder="e.g. yourname@college.edu.in" required>
             </div>
-            <div class="form-group">
-              <label class="form-label">Password</label>
-              <input type="password" class="form-input" id="login-password" placeholder="Enter password" required>
-            </div>
-            <div class="form-row-between">
-              <label class="checkbox-label">
-                <input type="checkbox" id="login-remember" checked> Keep me logged in
-              </label>
-              <a href="javascript:void(0)" class="link-text text-sm" onclick="showToast('⚡ Password reset link dispatched to registered email.')">Forgot?</a>
-            </div>
-            <button type="submit" class="btn btn-nyc-primary w-full mt-4">Log In to Build →</button>
-            <div class="text-center mt-3">
+            <button type="submit" class="btn btn-nyc-primary w-full mt-3" id="login-submit-btn">Send Login Code →</button>
+            <div class="text-center mt-4">
               <span class="text-muted text-sm">New student builder? </span>
               <a href="javascript:void(0)" class="link-text font-bold text-sm" onclick="goToOnboardingStep(4)">Sign Up →</a>
+            </div>
+            <div class="text-center mt-2">
+              <a href="javascript:void(0)" class="text-muted text-sm" onclick="goToOnboardingStep(2)">← Back</a>
             </div>
           </form>
         </div>
@@ -115,7 +108,7 @@
               <input type="email" class="form-input" id="verify-email-input" placeholder="e.g. yourname@college.edu.in" required>
               <span class="input-hint">Valid college domains (.edu, .ac.in, .in, etc.)</span>
             </div>
-            <button type="submit" class="btn btn-nyc-primary w-full mt-3">Send Verification OTP →</button>
+            <button type="submit" class="btn btn-nyc-primary w-full mt-3" id="verify-email-submit-btn">Send Verification OTP →</button>
             <div class="text-center mt-3">
               <a href="javascript:void(0)" class="text-muted text-sm" onclick="goToOnboardingStep(2)">← Back</a>
             </div>
@@ -130,10 +123,9 @@
           <h2 class="step-heading">Enter Verification Code</h2>
           <p class="step-subheading">Sent to <b id="otp-email-display">your email</b></p>
           
-          <div class="otp-sim-banner mt-3" id="otp-sim-banner">
-            <span class="text-xs text-muted">Verification Code:</span>
-            <span class="otp-code-pill font-mono font-bold" id="generated-otp-display">849205</span>
-            <button type="button" class="btn btn-sm btn-nyc-outline py-1 px-2 text-xs ml-2" onclick="autoFillOtp()">⚡ Auto-fill</button>
+          <div class="otp-sim-banner mt-3" id="otp-info-banner">
+            <span class="text-xs font-bold text-muted">📬 CHECK YOUR EMAIL:</span>
+            <span class="text-xs text-muted">A 6-digit verification code has been dispatched.</span>
           </div>
 
           <form class="onboarding-form mt-2" id="otp-form" onsubmit="handleOtpSubmit(event)">
@@ -152,7 +144,7 @@
               <button type="button" class="link-text text-sm font-bold ml-2" id="resend-otp-btn" style="display: none; background: none; border: none; cursor: pointer; text-decoration: underline;" onclick="resendOtp()">Resend Code 🔄</button>
             </div>
 
-            <button type="submit" class="btn btn-nyc-primary w-full mt-4">
+            <button type="submit" class="btn btn-nyc-primary w-full mt-4" id="otp-verify-submit-btn">
               Verify & Continue →
             </button>
             <div class="text-center mt-3">

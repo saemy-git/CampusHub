@@ -25,6 +25,7 @@ router.get('/health', (req, res) => {
 // Mount Subsystem Endpoints
 router.use('/auth', authRoutes);
 router.use('/user', authRoutes);
+router.use('/users', authRoutes);
 router.use('/roadmaps', roadmapsRoutes);
 router.use('/teams', teamsRoutes);
 router.use('/matches', matchesRoutes);

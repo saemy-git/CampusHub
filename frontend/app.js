@@ -9,6 +9,32 @@ const API_CONFIG = {
     : '/api'
 };
 
+/**
+ * Universal API Request Helper with JWT Token & HttpOnly credentials
+ */
+async function apiRequest(endpoint, options = {}) {
+  const url = `${API_CONFIG.BASE_URL}${endpoint}`;
+  const token = localStorage.getItem('campushub_token');
+  const headers = {
+    'Content-Type': 'application/json',
+    ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
+    ...(options.headers || {})
+  };
+
+  try {
+    const res = await fetch(url, {
+      ...options,
+      headers,
+      credentials: 'include'
+    });
+    const data = await res.json().catch(() => ({ success: false, message: 'Invalid response from server' }));
+    return { ok: res.ok, status: res.status, data };
+  } catch (err) {
+    console.error(`API Error [${endpoint}]:`, err);
+    return { ok: false, status: 0, data: { success: false, message: 'Unable to connect to CampusHub. Please check your network.' } };
+  }
+}
+
 const defaultUser = {
   name: 'Arjun Sharma',
   college: 'CGC Landran',
@@ -38,6 +64,8 @@ function loadStoredUser() {
 
 const store = {
   currentUser: loadStoredUser(),
+  verifyingEmail: '',
+  authMode: 'signup', // 'signup' | 'login'
   tempRegistration: {
     email: '',
     name: '',
@@ -46,7 +74,7 @@ const store = {
     year: '3rd Year',
     interests: ['AI / ML', 'Fullstack', 'Hackathons']
   },
-  isLoggedIn: Boolean(localStorage.getItem('campushub_logged_in')),
+  isLoggedIn: Boolean(localStorage.getItem('campushub_token') || localStorage.getItem('campushub_user')),
 
   activeView: 'home',
   activeRoadmap: 'ai',
@@ -409,6 +437,25 @@ const store = {
 // ==================================================
 // INITIALIZATION
 // ==================================================
+async function checkAuthSession() {
+  const token = localStorage.getItem('campushub_token');
+  if (!token) return;
+
+  const { ok, data } = await apiRequest('/auth/me');
+  if (ok && data.success && data.user) {
+    store.currentUser = data.user;
+    store.isLoggedIn = true;
+    localStorage.setItem('campushub_user', JSON.stringify(data.user));
+    updateUserUI();
+    document.getElementById('onboarding-modal')?.classList.remove('active');
+  } else {
+    // Session expired or invalid
+    localStorage.removeItem('campushub_token');
+    store.isLoggedIn = false;
+    document.getElementById('onboarding-modal')?.classList.add('active');
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   setupEventListeners();
   renderAllSubsystems();
@@ -417,11 +464,13 @@ document.addEventListener('DOMContentLoaded', () => {
   updateUserUI();
 
   // If already logged in, dismiss onboarding modal automatically
-  if (store.isLoggedIn) {
+  if (store.isLoggedIn && localStorage.getItem('campushub_token')) {
     document.getElementById('onboarding-modal')?.classList.remove('active');
   } else {
     document.getElementById('onboarding-modal')?.classList.add('active');
   }
+
+  checkAuthSession();
 });
 
 // Switch Views
@@ -516,133 +565,234 @@ window.goToOnboardingStep = function(stepNum) {
   }
 };
 
-// Step 3: Login Handler
-window.handleLoginSubmit = function(e) {
+// Step 3: Login Handler (Email OTP)
+window.handleLoginSubmit = async function(e) {
   if (e) e.preventDefault();
   const emailInput = document.getElementById('login-email');
-  const email = emailInput ? emailInput.value.trim() : '';
+  const email = emailInput ? emailInput.value.trim().toLowerCase() : '';
+  const submitBtn = document.getElementById('login-submit-btn') || e?.target?.querySelector('button[type="submit"]');
+
   if (!email) {
-    showToast('⚠️ Please enter your college email');
+    showToast('⚠️ Please enter your college email address.');
     return;
   }
 
-  // Derive readable name from email username
-  let derivedName = email.split('@')[0].replace(/[._-]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-  if (!derivedName) derivedName = 'Student Builder';
+  // Set loading state
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending Login Code...';
+  }
 
-  store.currentUser.email = email;
-  store.currentUser.name = derivedName;
-  store.currentUser.isVerified = true;
-  store.currentUser.avatar = `https://api.dicebear.com/7.x/identicon/svg?seed=${encodeURIComponent(derivedName)}`;
-  store.isLoggedIn = true;
+  try {
+    const { ok, data } = await apiRequest('/auth/send-otp', {
+      method: 'POST',
+      body: JSON.stringify({ email })
+    });
 
-  localStorage.setItem('campushub_user', JSON.stringify(store.currentUser));
-  localStorage.setItem('campushub_logged_in', 'true');
+    if (!ok || !data.success) {
+      showToast(data.message || '⚠️ Please enter a valid college email address.');
+      return;
+    }
 
-  updateUserUI();
-  document.getElementById('onboarding-modal')?.classList.remove('active');
-  showToast(`⚡ Welcome back, ${derivedName}! Logged in to your CampusHub account.`);
-  switchView('profile');
+    store.verifyingEmail = email;
+    store.authMode = 'login';
+    store.tempRegistration.email = email;
+
+    const otpDisplay = document.getElementById('otp-email-display');
+    if (otpDisplay) otpDisplay.textContent = email;
+
+    // Clear OTP inputs and focus first box
+    const boxes = document.querySelectorAll('.otp-box');
+    boxes.forEach(b => b.value = '');
+    startOtpTimer();
+
+    goToOnboardingStep(5);
+    setTimeout(() => {
+      if (boxes[0]) boxes[0].focus();
+    }, 150);
+
+    showToast(data.message || 'Verification code sent to your email.');
+  } finally {
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Send Login Code →';
+    }
+  }
 };
 
-// OTP Helpers
-function generateNewOtp() {
-  const code = Math.floor(100000 + Math.random() * 900000).toString();
-  store.tempRegistration.generatedOtp = code;
-  const disp = document.getElementById('generated-otp-display');
-  if (disp) disp.textContent = code;
-  return code;
-}
+// Resend OTP Handler
+window.resendOtp = async function() {
+  const email = store.verifyingEmail || store.tempRegistration.email;
+  if (!email) {
+    showToast('⚠️ Please enter your email address first.');
+    goToOnboardingStep(4);
+    return;
+  }
 
-window.autoFillOtp = function() {
-  const code = store.tempRegistration.generatedOtp || '849205';
-  const boxes = document.querySelectorAll('.otp-box');
-  code.split('').forEach((digit, idx) => {
-    if (boxes[idx]) boxes[idx].value = digit;
-  });
-  if (boxes[5]) boxes[5].focus();
-  showToast(`⚡ Verification code ${code} auto-filled!`);
+  const resendBtn = document.getElementById('resend-otp-btn');
+  if (resendBtn) {
+    resendBtn.disabled = true;
+    resendBtn.textContent = 'Resending...';
+  }
+
+  try {
+    const { ok, data } = await apiRequest('/auth/send-otp', {
+      method: 'POST',
+      body: JSON.stringify({ email })
+    });
+
+    if (!ok || !data.success) {
+      showToast(data.message || 'Please wait before requesting another code.');
+      return;
+    }
+
+    const boxes = document.querySelectorAll('.otp-box');
+    boxes.forEach(b => b.value = '');
+    if (boxes[0]) boxes[0].focus();
+    startOtpTimer();
+    showToast(data.message || 'Verification code sent to your email.');
+  } finally {
+    if (resendBtn) {
+      resendBtn.disabled = false;
+      resendBtn.textContent = 'Resend Code 🔄';
+    }
+  }
 };
 
-window.resendOtp = function() {
-  const email = store.tempRegistration.email || 'your email';
-  const code = generateNewOtp();
-  const boxes = document.querySelectorAll('.otp-box');
-  boxes.forEach(b => b.value = '');
-  if (boxes[0]) boxes[0].focus();
-  startOtpTimer();
-  showToast(`🔄 New verification code: ${code}`);
-};
-
-// Step 4: Verify Email Handler
-window.handleVerifyEmailSubmit = function(e) {
+// Step 4: Verify Email Handler (Sign Up)
+window.handleVerifyEmailSubmit = async function(e) {
   if (e) e.preventDefault();
   const emailInput = document.getElementById('verify-email-input');
-  const email = emailInput ? emailInput.value.trim() : '';
+  const email = emailInput ? emailInput.value.trim().toLowerCase() : '';
+  const submitBtn = document.getElementById('verify-email-submit-btn') || e?.target?.querySelector('button[type="submit"]');
+
   if (!email) {
-    showToast('⚠️ Please enter a valid college email');
+    showToast('⚠️ Please enter a valid college email address.');
     return;
   }
 
-  store.tempRegistration.email = email;
-
-  // Auto-fill suggested name into Step 7
-  const derivedName = email.split('@')[0].replace(/[._-]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
-  if (derivedName) {
-    store.tempRegistration.name = derivedName;
-    const nameInput = document.getElementById('ob-student-name');
-    if (nameInput) nameInput.value = derivedName;
+  // Set loading state
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending OTP...';
   }
 
-  // Update OTP display & generate code
-  const otpDisplay = document.getElementById('otp-email-display');
-  if (otpDisplay) otpDisplay.textContent = email;
+  try {
+    const { ok, data } = await apiRequest('/auth/send-otp', {
+      method: 'POST',
+      body: JSON.stringify({ email })
+    });
 
-  const code = generateNewOtp();
+    if (!ok || !data.success) {
+      showToast(data.message || '⚠️ Please enter a valid college email address.');
+      return;
+    }
 
-  // Clear inputs and focus first box
-  const boxes = document.querySelectorAll('.otp-box');
-  boxes.forEach(b => b.value = '');
-  startOtpTimer();
+    store.verifyingEmail = email;
+    store.authMode = 'signup';
+    store.tempRegistration.email = email;
 
-  goToOnboardingStep(5);
-  setTimeout(() => {
-    if (boxes[0]) boxes[0].focus();
-  }, 100);
+    // Auto-fill suggested name into Step 7
+    const derivedName = email.split('@')[0].replace(/[._-]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    if (derivedName) {
+      store.tempRegistration.name = derivedName;
+      const nameInput = document.getElementById('ob-student-name');
+      if (nameInput) nameInput.value = derivedName;
+    }
 
-  showToast(`✉️ 6-digit verification code: ${code}`);
+    const otpDisplay = document.getElementById('otp-email-display');
+    if (otpDisplay) otpDisplay.textContent = email;
+
+    // Clear inputs and focus first box
+    const boxes = document.querySelectorAll('.otp-box');
+    boxes.forEach(b => b.value = '');
+    startOtpTimer();
+
+    goToOnboardingStep(5);
+    setTimeout(() => {
+      if (boxes[0]) boxes[0].focus();
+    }, 150);
+
+    showToast(data.message || 'Verification code sent to your email.');
+  } finally {
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Send Verification OTP →';
+    }
+  }
 };
 
-// Step 5: OTP Verification Handler
-window.handleOtpSubmit = function(e) {
+// Step 5: OTP Verification Handler (Real Backend API Verification)
+window.handleOtpSubmit = async function(e) {
   if (e) e.preventDefault();
   const boxes = Array.from(document.querySelectorAll('.otp-box'));
   const enteredCode = boxes.map(b => b.value.trim()).join('');
-  const validCode = store.tempRegistration.generatedOtp || '849205';
+  const submitBtn = document.getElementById('otp-verify-submit-btn') || e?.target?.querySelector('button[type="submit"]');
 
-  if (!enteredCode || enteredCode.length < 6) {
+  if (!enteredCode || enteredCode.length !== 6 || !/^\d{6}$/.test(enteredCode)) {
     showToast('⚠️ Please enter all 6 digits of the verification code.');
-    const firstEmpty = boxes.find(b => !b.value.trim());
+    const firstEmpty = boxes.find(b => !b.value.trim()) || boxes[0];
     if (firstEmpty) firstEmpty.focus();
     return;
   }
 
-  // Strictly verify entered OTP
-  if (enteredCode !== validCode && enteredCode !== '849205' && enteredCode !== '123456') {
-    showToast(`❌ Invalid verification code! Expected: ${validCode}`);
-    boxes.forEach(b => {
-      b.style.borderColor = 'var(--nyc-red, #ff4757)';
-      b.style.backgroundColor = '#ffe5e5';
-      setTimeout(() => {
-        b.style.borderColor = '';
-        b.style.backgroundColor = '';
-      }, 1500);
-    });
+  const email = store.verifyingEmail || store.tempRegistration.email;
+  if (!email) {
+    showToast('⚠️ Session expired. Please enter your college email again.');
+    goToOnboardingStep(4);
     return;
   }
 
-  goToOnboardingStep(6);
-  showToast('✓ College email verified successfully! Select your campus node.');
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Verifying...';
+  }
+
+  try {
+    const { ok, data } = await apiRequest('/auth/verify-otp', {
+      method: 'POST',
+      body: JSON.stringify({ email, otp: enteredCode })
+    });
+
+    if (!ok || !data.success) {
+      showToast(data.message || 'Incorrect verification code. Please try again.');
+      boxes.forEach(b => {
+        b.style.borderColor = 'var(--nyc-red, #ff4757)';
+        b.style.backgroundColor = '#ffe5e5';
+        setTimeout(() => {
+          b.style.borderColor = '';
+          b.style.backgroundColor = '';
+        }, 1500);
+      });
+      return;
+    }
+
+    // Save token and authenticated user
+    if (data.token) {
+      localStorage.setItem('campushub_token', data.token);
+    }
+    if (data.user) {
+      store.currentUser = data.user;
+      localStorage.setItem('campushub_user', JSON.stringify(data.user));
+    }
+    store.isLoggedIn = true;
+    updateUserUI();
+
+    showToast('✓ Email verified successfully.');
+
+    if (store.authMode === 'login') {
+      document.getElementById('onboarding-modal')?.classList.remove('active');
+      showToast(`⚡ Welcome back, ${store.currentUser.name || 'Builder'}!`);
+      switchView('profile');
+    } else {
+      goToOnboardingStep(6);
+    }
+  } finally {
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Verify & Continue →';
+    }
+  }
 };
 
 // Step 6: Filter College list
@@ -683,35 +833,47 @@ window.handleDeptAndNameSubmit = function(e) {
 };
 
 // Step 8: Finish Registration & Launch Dashboard
-window.finishOnboarding = function() {
+window.finishOnboarding = async function() {
   const activeChips = Array.from(document.querySelectorAll('#interests-chips-container .interest-chip.active'))
     .map(c => c.dataset.interest || c.textContent.trim());
 
   const temp = store.tempRegistration;
   const finalName = temp.name || store.currentUser.name || 'Student Builder';
-  const finalEmail = temp.email || store.currentUser.email || 'student@college.edu';
+  const finalEmail = temp.email || store.currentUser.email || '';
   const finalCollege = temp.college || store.currentUser.college || 'CGC Landran';
   const finalDept = temp.department || 'Computer Science & Engineering';
   const finalYear = temp.year || '3rd Year';
+  const interestsList = activeChips.length > 0 ? activeChips : ['AI / ML', 'Fullstack', 'Hackathons'];
+  const skillsList = activeChips.length > 0 ? activeChips : ['Python', 'JavaScript', 'React.js'];
 
-  const avatarUrl = `https://api.dicebear.com/7.x/identicon/svg?seed=${encodeURIComponent(finalName)}`;
-
-  store.currentUser = {
-    ...store.currentUser,
+  const profilePayload = {
     name: finalName,
     email: finalEmail,
     college: finalCollege,
     department: finalDept,
     year: finalYear,
-    interests: activeChips.length > 0 ? activeChips : ['AI / ML', 'Fullstack', 'Hackathons'],
-    skills: activeChips.length > 0 ? activeChips : ['Python', 'JavaScript', 'React.js'],
-    isVerified: true,
-    avatar: avatarUrl
+    interests: interestsList,
+    skills: skillsList
   };
+
+  // Persist to backend database
+  const { ok, data } = await apiRequest('/auth/profile', {
+    method: 'PUT',
+    body: JSON.stringify(profilePayload)
+  });
+
+  if (ok && data.user) {
+    store.currentUser = data.user;
+  } else {
+    store.currentUser = {
+      ...store.currentUser,
+      ...profilePayload,
+      isVerified: true
+    };
+  }
 
   store.isLoggedIn = true;
   localStorage.setItem('campushub_user', JSON.stringify(store.currentUser));
-  localStorage.setItem('campushub_logged_in', 'true');
 
   updateUserUI();
   document.getElementById('onboarding-modal')?.classList.remove('active');
@@ -720,11 +882,12 @@ window.finishOnboarding = function() {
 };
 
 // Logout / Switch Account
-window.logoutUser = function() {
+window.logoutUser = async function() {
+  await apiRequest('/auth/logout', { method: 'POST' });
+  localStorage.removeItem('campushub_token');
   localStorage.removeItem('campushub_user');
-  localStorage.removeItem('campushub_logged_in');
   store.isLoggedIn = false;
-  store.currentUser = { ...defaultUser };
+  store.currentUser = { ...defaultUser, isVerified: false };
   updateUserUI();
   goToOnboardingStep(2);
   document.getElementById('onboarding-modal')?.classList.add('active');
@@ -1377,8 +1540,8 @@ window.openEditProfileModal = function() {
   openModal('edit-profile-modal');
 };
 
-window.handleProfileUpdateSubmit = function(e) {
-  e.preventDefault();
+window.handleProfileUpdateSubmit = async function(e) {
+  if (e) e.preventDefault();
   const nameVal = document.getElementById('edit-prof-name')?.value.trim();
   const collegeVal = document.getElementById('edit-prof-college')?.value.trim();
   const deptVal = document.getElementById('edit-prof-dept')?.value.trim();
@@ -1386,13 +1549,25 @@ window.handleProfileUpdateSubmit = function(e) {
   const skillsVal = document.getElementById('edit-prof-skills')?.value.trim();
   const bioVal = document.getElementById('edit-prof-bio')?.value.trim();
 
-  if (nameVal) store.currentUser.name = nameVal;
-  if (collegeVal) store.currentUser.college = collegeVal;
-  if (deptVal) store.currentUser.department = deptVal;
-  if (yearVal) store.currentUser.year = yearVal;
-  if (bioVal) store.currentUser.bio = bioVal;
+  const updates = {};
+  if (nameVal) updates.name = nameVal;
+  if (collegeVal) updates.college = collegeVal;
+  if (deptVal) updates.department = deptVal;
+  if (yearVal) updates.year = yearVal;
+  if (bioVal) updates.bio = bioVal;
   if (skillsVal) {
-    store.currentUser.skills = skillsVal.split(',').map(s => s.trim()).filter(Boolean);
+    updates.skills = skillsVal.split(',').map(s => s.trim()).filter(Boolean);
+  }
+
+  const { ok, data } = await apiRequest('/auth/profile', {
+    method: 'PUT',
+    body: JSON.stringify(updates)
+  });
+
+  if (ok && data.user) {
+    store.currentUser = data.user;
+  } else {
+    store.currentUser = { ...store.currentUser, ...updates };
   }
 
   localStorage.setItem('campushub_user', JSON.stringify(store.currentUser));

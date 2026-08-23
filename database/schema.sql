@@ -17,8 +17,22 @@ CREATE TABLE IF NOT EXISTS users (
     interests TEXT, -- Stored as JSON array
     avatar TEXT,
     xp INTEGER DEFAULT 0,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
+
+-- EMAIL OTPS TABLE (Secure Authentication)
+CREATE TABLE IF NOT EXISTS email_otps (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    email TEXT NOT NULL,
+    otp_hash TEXT NOT NULL,
+    expires_at INTEGER NOT NULL,
+    attempts INTEGER DEFAULT 0,
+    created_at INTEGER NOT NULL,
+    last_sent_at INTEGER NOT NULL
+);
+CREATE INDEX IF NOT EXISTS idx_email_otps_email ON email_otps(email);
+
 
 -- ROADMAPS TABLE
 CREATE TABLE IF NOT EXISTS roadmaps (

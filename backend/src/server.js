@@ -5,6 +5,7 @@
 
 const express = require('express');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const path = require('path');
 const config = require('./config/config');
 const apiRoutes = require('./routes');
@@ -18,7 +19,11 @@ const app = express();
 db.getDB();
 
 // Middlewares
-app.use(cors({ origin: config.FRONTEND_ORIGIN }));
+app.use(cors({
+  origin: config.FRONTEND_ORIGIN === '*' ? true : config.FRONTEND_ORIGIN,
+  credentials: true
+}));
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(requestLogger);
