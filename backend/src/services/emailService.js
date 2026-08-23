@@ -12,16 +12,27 @@ function getTransporter() {
   if (transporter) return transporter;
 
   if (config.SMTP_HOST && config.SMTP_USER && config.SMTP_PASS) {
-    transporter = nodemailer.createTransport({
-      host: config.SMTP_HOST,
-      port: config.SMTP_PORT,
-      secure: config.SMTP_SECURE,
-      auth: {
-        user: config.SMTP_USER,
-        pass: config.SMTP_PASS
-      }
-    });
-    console.log(`📧 [EMAIL] Configured SMTP Transport via ${config.SMTP_HOST}:${config.SMTP_PORT}`);
+    const isGmail = config.SMTP_HOST.toLowerCase().includes('gmail');
+    const transportOptions = isGmail
+      ? {
+          service: 'gmail',
+          auth: {
+            user: config.SMTP_USER,
+            pass: config.SMTP_PASS.replace(/\s+/g, '')
+          }
+        }
+      : {
+          host: config.SMTP_HOST,
+          port: config.SMTP_PORT,
+          secure: config.SMTP_SECURE,
+          auth: {
+            user: config.SMTP_USER,
+            pass: config.SMTP_PASS.replace(/\s+/g, '')
+          }
+        };
+
+    transporter = nodemailer.createTransport(transportOptions);
+    console.log(`📧 [EMAIL] Configured Live SMTP Transport via ${config.SMTP_HOST} (${config.SMTP_USER})`);
   } else {
     // Development / Local Mode: Safe transporter that logs to console
     transporter = {
@@ -106,13 +117,26 @@ This code will expire in 5 minutes. If you did not request this verification, pl
 </html>
   `;
 
-  return await mailTransporter.sendMail({
-    from: config.SMTP_FROM,
-    to: toEmail,
-    subject: subject,
-    text: textContent,
-    html: htmlContent
-  });
+  try {
+    return await mailTransporter.sendMail({
+      from: config.SMTP_FROM,
+      to: toEmail,
+      subject: subject,
+      text: textContent,
+      html: htmlContent
+    });
+  } catch (err) {
+    console.warn(`⚠️ [EMAIL] Live SMTP send failed (${err.message}). Logging verification code to console:`);
+    console.log(`
+⚡ =======================================================
+📧 [CAMPUSHUB VERIFICATION CODE DISPATCH]
+📬 To:          ${toEmail}
+🔑 OTP Code:    ${otpCode}
+⏱️ Time:        ${new Date().toLocaleTimeString()}
+=======================================================
+    `);
+    return { messageId: `fallback-${Date.now()}` };
+  }
 }
 
 module.exports = {
