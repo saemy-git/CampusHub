@@ -55,7 +55,7 @@ app.use((req, res, next) => {
 app.use(errorHandler);
 
 // Start HTTP Server
-const server = app.listen(config.PORT, () => {
+const server = app.listen(config.PORT, '0.0.0.0', () => {
   console.log(`
 🚀 =======================================================
 ⚡ CAMPUSHUB BACKEND REST API SERVER ONLINE

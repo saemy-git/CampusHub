@@ -1,0 +1,34 @@
+# Koyeb Configuration
+# https://www.koyeb.com/docs/reference/app-specification
+name: campushub
+services:
+  - name: web
+    type: web
+    instance_type: nano
+    regions:
+      - fra
+    ports:
+      - port: 5000
+        path: /
+    routes:
+      - path: /
+        port: 5000
+    health_checks:
+      - http:
+          port: 5000
+          path: /api/health
+        interval: 30
+        timeout: 5
+    scalings:
+      - min: 1
+        max: 1
+    git:
+      repository: github.com/saemy-git/CampusHub
+      branch: main
+      build_command: cd backend && npm install
+      run_command: node backend/src/server.js
+    env:
+      - key: NODE_ENV
+        value: production
+      - key: FRONTEND_ORIGIN
+        value: "*"
