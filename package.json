@@ -1,0 +1,23 @@
+{
+  "name": "campus-hub",
+  "version": "2.6.4",
+  "description": "Campus Hub — Systems & Terminal OS Subsystem for Academic Clusters and Student Repositories",
+  "main": "app.js",
+  "scripts": {
+    "start": "serve -l 3000",
+    "dev": "serve -l 3000",
+    "serve": "serve -l 3000",
+    "build": "echo \"[BUILD] Pure static architecture. No compilation step required.\""
+  },
+  "keywords": [
+    "campus-hub",
+    "terminal-ui",
+    "systems-aesthetic",
+    "developer-console"
+  ],
+  "author": "Campus Hub Consortium",
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.2.4"
+  }
+}

@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CampusHub — Not Your College Style | Don’t Just Study. Build Real Stuff.</title>
+  <meta name="description" content="CampusHub is the verified student-only collaboration network inspired by Not Your College. Find hackathon teammates, follow real project roadmaps, and ship software.">
+
+  <!-- Google Fonts: Staatliches (Display), Caveat (Handwritten Doodles), Poppins & Plus Jakarta Sans (Body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Plus+Jakarta+Sans:wght@600;700;800&family=Poppins:wght@400;500;600;700;800&family=Staatliches&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="nyc-body">
+
+  <!-- ==================================================
+       8-STEP INTERACTIVE ONBOARDING FLOW MODAL (NYC STYLE)
+       ================================================== -->
+  <div id="onboarding-modal" class="onboarding-overlay active">
+    <div class="onboarding-card nyc-box-shadow">
+      
+      <!-- Top Progress Indicator -->
+      <div class="onboarding-progress-bar">
+        <div class="progress-fill" id="onboarding-progress-fill" style="width: 12.5%;"></div>
+      </div>
+
+      <!-- Skip / Close Demo Button -->
+      <button class="skip-onboarding-btn" id="skip-onboarding-btn" title="Skip to Dashboard Demo">
+        Skip to App ✕
+      </button>
+
+      <!-- SCREEN 1: SPLASH -->
+      <div class="onboarding-step active" id="onboarding-step-1" data-step="1">
+        <div class="splash-content text-center">
+          <div class="sticker-tag rotate-left mb-2">⚡ NOT YOUR BORING COLLEGE</div>
+          <div class="splash-logo-wrap">
+            <div class="app-logo-badge pulse-logo">
+              <span class="logo-emoji">🚀</span>
+            </div>
+          </div>
+          <h1 class="splash-title">CAMPUSHUB</h1>
+          <p class="splash-tagline">“Your Campus. Connected.”</p>
+          <div class="handwritten-scribble">“Don’t just connect. Find someone to build with!”</div>
+          <p class="splash-desc">The high-octane platform for students to find hackathon partners, ship real projects, and bypass academic theory.</p>
+          <button class="btn btn-nyc-primary btn-lg w-full mt-6" onclick="goToOnboardingStep(2)">
+            START BUILDING NOW <span class="arrow-sym">→</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- SCREEN 2: WELCOME -->
+      <div class="onboarding-step" id="onboarding-step-2" data-step="2">
+        <div class="welcome-content text-center">
+          <div class="sticker-tag rotate-right mb-2">🔥 100% BUILD-FIRST</div>
+          <div class="welcome-illustration">
+            <div class="collab-illus-circle">
+              <span class="illus-emoji">⚡</span>
+              <div class="illus-badge badge-1">👥 Teammates</div>
+              <div class="illus-badge badge-2">💻 Code Roadmaps</div>
+              <div class="illus-badge badge-3">🏆 Hackathons</div>
+            </div>
+          </div>
+          <h2 class="step-heading mt-4">Welcome to CampusHub</h2>
+          <p class="step-subheading">Connect with 14,800+ student developers, designers, and builders from top campus nodes.</p>
+          <div class="btn-stack mt-6">
+            <button class="btn btn-nyc-primary w-full" onclick="goToOnboardingStep(4)">Create Student Account</button>
+            <button class="btn btn-nyc-secondary w-full" onclick="goToOnboardingStep(3)">Student Login</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCREEN 3: LOGIN -->
+      <div class="onboarding-step" id="onboarding-step-3" data-step="3">
+        <div class="login-content">
+          <div class="sticker-tag rotate-left mb-2">🔑 VERIFIED PORTAL</div>
+          <h2 class="step-heading">Student Login</h2>
+          <p class="step-subheading">Access your campus build network.</p>
+          
+          <form class="onboarding-form mt-4" onsubmit="event.preventDefault(); goToOnboardingStep(6);">
+            <div class="form-group">
+              <label class="form-label">College Email</label>
+              <input type="email" class="form-input" id="login-email" value="arjun.sharma@cgc.edu.in" placeholder="name@college.edu.in" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Password</label>
+              <input type="password" class="form-input" value="••••••••••••" placeholder="Enter password" required>
+            </div>
+            <div class="form-row-between">
+              <label class="checkbox-label">
+                <input type="checkbox" checked> Keep me logged in
+              </label>
+              <a href="javascript:void(0)" class="link-text text-sm">Forgot?</a>
+            </div>
+            <button type="submit" class="btn btn-nyc-primary w-full mt-4">Log In to Build</button>
+            <div class="text-center mt-3">
+              <span class="text-muted text-sm">New student builder? </span>
+              <a href="javascript:void(0)" class="link-text font-bold text-sm" onclick="goToOnboardingStep(4)">Sign Up →</a>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- SCREEN 4: VERIFY COLLEGE -->
+      <div class="onboarding-step" id="onboarding-step-4" data-step="4">
+        <div class="verify-content">
+          <div class="sticker-tag rotate-right mb-2">🛡️ ZERO SPAM POLICY</div>
+          <h2 class="step-heading">Verify College Email</h2>
+          <p class="step-subheading">Only verified students can access team matching and internal campus repos.</p>
+          
+          <form class="onboarding-form mt-4" onsubmit="event.preventDefault(); goToOnboardingStep(5);">
+            <div class="form-group">
+              <label class="form-label">Official College Email Address</label>
+              <input type="email" class="form-input" id="verify-email-input" value="arjun.sharma@cgc.edu.in" placeholder="arjun.sharma@cgc.edu.in" required>
+              <span class="input-hint">Valid college domains (.edu, .ac.in)</span>
+            </div>
+            <button type="submit" class="btn btn-nyc-primary w-full mt-3">Send Verification OTP →</button>
+            <div class="text-center mt-3">
+              <a href="javascript:void(0)" class="text-muted text-sm" onclick="goToOnboardingStep(2)">← Back</a>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- SCREEN 5: ENTER CODE -->
+      <div class="onboarding-step" id="onboarding-step-5" data-step="5">
+        <div class="otp-content text-center">
+          <div class="sticker-tag rotate-left mb-2">⚡ 6-DIGIT SECURITY KEY</div>
+          <h2 class="step-heading">Enter Verification Code</h2>
+          <p class="step-subheading">Sent to <b id="otp-email-display">arjun.sharma@cgc.edu.in</b></p>
+          
+          <div class="otp-boxes-grid mt-4">
+            <input type="text" maxlength="1" class="otp-box" value="8" autofocus>
+            <input type="text" maxlength="1" class="otp-box" value="4">
+            <input type="text" maxlength="1" class="otp-box" value="9">
+            <input type="text" maxlength="1" class="otp-box" value="2">
+            <input type="text" maxlength="1" class="otp-box" value="0">
+            <input type="text" maxlength="1" class="otp-box" value="5">
+          </div>
+
+          <div class="resend-row mt-4">
+            <span class="text-muted text-sm">Resend in </span>
+            <span class="timer-badge" id="otp-timer">00:48</span>
+          </div>
+
+          <button class="btn btn-nyc-primary w-full mt-4" onclick="goToOnboardingStep(6)">
+            Verify & Continue →
+          </button>
+          <div class="text-center mt-3">
+            <a href="javascript:void(0)" class="text-muted text-sm" onclick="goToOnboardingStep(4)">Change Email</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- SCREEN 6: SELECT COLLEGE -->
+      <div class="onboarding-step" id="onboarding-step-6" data-step="6">
+        <div class="college-content">
+          <div class="sticker-tag rotate-right mb-2">🏛️ CAMPUS NODE</div>
+          <h2 class="step-heading">Select Your College</h2>
+          <p class="step-subheading">Join your campus house to unlock local hackathons and roadmaps.</p>
+          
+          <div class="search-input-wrap mt-3">
+            <input type="text" id="college-search-input" class="search-field" placeholder="Search college (e.g. CGC Landran, LPU)...">
+          </div>
+
+          <div class="popular-colleges-list mt-3" id="popular-colleges-list">
+            <div class="college-item selected" data-college="CGC Landran">
+              <div class="college-avatar">🏛️</div>
+              <div class="college-info">
+                <div class="college-name">CGC Landran</div>
+                <div class="college-meta">Mohali • 14,800+ Active Builders</div>
+              </div>
+              <div class="check-mark">✓</div>
+            </div>
+
+            <div class="college-item" data-college="LPU">
+              <div class="college-avatar">🎓</div>
+              <div class="college-info">
+                <div class="college-name">Lovely Professional University (LPU)</div>
+                <div class="college-meta">Jalandhar • 28,000+ Students</div>
+              </div>
+              <div class="check-mark">✓</div>
+            </div>
+
+            <div class="college-item" data-college="Chandigarh University">
+              <div class="college-avatar">🏫</div>
+              <div class="college-info">
+                <div class="college-name">Chandigarh University (CU)</div>
+                <div class="college-meta">Gharuan • 22,000+ Students</div>
+              </div>
+              <div class="check-mark">✓</div>
+            </div>
+
+            <div class="college-item" data-college="PEC University">
+              <div class="college-avatar">🏛️</div>
+              <div class="college-info">
+                <div class="college-name">PEC University of Technology</div>
+                <div class="college-meta">Chandigarh • 4,500+ Students</div>
+              </div>
+              <div class="check-mark">✓</div>
+            </div>
+
+            <div class="college-item" data-college="Thapar University">
+              <div class="college-avatar">🎓</div>
+              <div class="college-info">
+                <div class="college-name">Thapar Institute (TIET)</div>
+                <div class="college-meta">Patiala • 8,200+ Students</div>
+              </div>
+              <div class="check-mark">✓</div>
+            </div>
+          </div>
+
+          <button class="btn btn-nyc-primary w-full mt-4" onclick="goToOnboardingStep(7)">
+            Continue →
+          </button>
+        </div>
+      </div>
+
+      <!-- SCREEN 7: DEPARTMENT & YEAR -->
+      <div class="onboarding-step" id="onboarding-step-7" data-step="7">
+        <div class="dept-content">
+          <div class="sticker-tag rotate-left mb-2">👤 BUILDER PROFILE</div>
+          <h2 class="step-heading">Tell Us About Yourself</h2>
+          <p class="step-subheading">Help teammates discover your skillset.</p>
+          
+          <form class="onboarding-form mt-4" onsubmit="event.preventDefault(); goToOnboardingStep(8);">
+            <div class="form-group">
+              <label class="form-label">Full Name</label>
+              <input type="text" class="form-input" id="ob-student-name" value="Arjun Sharma" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Department / Branch</label>
+              <select class="form-select" id="ob-dept-select">
+                <option value="CSE" selected>Computer Science & Engineering (CSE)</option>
+                <option value="AI_DS">Artificial Intelligence & Data Science</option>
+                <option value="IT">Information Technology (IT)</option>
+                <option value="ECE">Electronics & Communication (ECE)</option>
+                <option value="ME">Mechanical Engineering</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Year of Study</label>
+              <select class="form-select" id="ob-year-select">
+                <option value="1st Year">1st Year (Freshman)</option>
+                <option value="2nd Year">2nd Year (Sophomore)</option>
+                <option value="3rd Year" selected>3rd Year (Junior)</option>
+                <option value="4th Year">4th Year (Senior)</option>
+              </select>
+            </div>
+
+            <button type="submit" class="btn btn-nyc-primary w-full mt-4">Continue →</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- SCREEN 8: CHOOSE INTERESTS -->
+      <div class="onboarding-step" id="onboarding-step-8" data-step="8">
+        <div class="interests-content">
+          <div class="sticker-tag rotate-right mb-2">🎯 SKILL TRACKS</div>
+          <h2 class="step-heading">Choose What You Want to Build</h2>
+          <p class="step-subheading">Get custom roadmaps, hackathon pings, and teammate recommendations.</p>
+          
+          <div class="chips-grid mt-4" id="interests-chips-container">
+            <div class="interest-chip active" data-interest="AI / ML">🤖 AI / ML</div>
+            <div class="interest-chip active" data-interest="Fullstack">💻 Full-Stack Web</div>
+            <div class="interest-chip active" data-interest="Hackathons">🏆 Hackathons</div>
+            <div class="interest-chip active" data-interest="Startup">🚀 Startups</div>
+            <div class="interest-chip active" data-interest="Design">🎨 UI/UX Design</div>
+            <div class="interest-chip" data-interest="Robotics">🦾 Robotics</div>
+            <div class="interest-chip" data-interest="Placement">💼 Placements</div>
+            <div class="interest-chip" data-interest="Web3">⛓️ Web3 & Crypto</div>
+            <div class="interest-chip" data-interest="Cloud">☁️ Cloud & DevOps</div>
+          </div>
+
+          <div class="mt-6">
+            <button class="btn btn-nyc-primary w-full btn-lg" onclick="finishOnboarding()">
+              LAUNCH MY DASHBOARD <span class="arrow-sym">→</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ==================================================
+       MAIN APPLICATION LAYOUT (NYC / SHERYIANS STYLE)
+       ================================================== -->
+  <div class="nyc-app-wrapper">
+
+    <!-- TOP NYC STICKY NAVIGATION BAR -->
+    <header class="nyc-navbar">
+      <div class="nyc-nav-container">
+        
+        <!-- Brand Logo -->
+        <div class="nyc-brand-wrap" onclick="switchView('home')">
+          <div class="nyc-logo-icon">🚀</div>
+          <div class="nyc-logo-text">
+            <span class="nyc-logo-title">CAMPUSHUB</span>
+            <span class="nyc-logo-badge">NYC STYLE</span>
+          </div>
+        </div>
+
+        <!-- Center Nav Anchors -->
+        <nav class="nyc-nav-links" aria-label="Main Navigation">
+          <a href="#home" class="nyc-nav-link active" data-view="home">HOME</a>
+          <a href="#roadmaps" class="nyc-nav-link" data-view="roadmaps">ROADMAPS</a>
+          <a href="#teams" class="nyc-nav-link hero-link" data-view="teams">
+            FIND TEAMMATES <span class="live-pulse-dot"></span>
+          </a>
+          <a href="#communities" class="nyc-nav-link" data-view="communities">COMMUNITIES</a>
+          <a href="#discussions" class="nyc-nav-link" data-view="discussions">FEED</a>
+          <a href="#events" class="nyc-nav-link" data-view="events">HACKATHONS</a>
+          <a href="#marketplace" class="nyc-nav-link" data-view="marketplace">MARKETPLACE</a>
+        </nav>
+
+        <!-- Right User Actions -->
+        <div class="nyc-nav-actions">
+          
+          <!-- XP Badge -->
+          <div class="nyc-xp-badge" title="Campus XP & Build Points">
+            <span class="xp-fire">🔥</span>
+            <span class="xp-val" id="user-xp-display">2,450 XP</span>
+          </div>
+
+          <!-- Chat Drawer Trigger -->
+          <button class="nyc-icon-btn" id="open-chat-btn" title="Messages">
+            <span>💬</span>
+            <span class="nyc-btn-badge" id="chat-unread-count">2</span>
+          </button>
+
+          <!-- Notifications -->
+          <div class="nyc-notif-wrap">
+            <button class="nyc-icon-btn" id="notif-btn" title="Notifications">
+              <span>🔔</span>
+              <span class="nyc-btn-badge" id="notif-unread-count">3</span>
+            </button>
+
+            <div class="nyc-notif-popover" id="notifications-popover">
+              <div class="notif-pop-head">
+                <b>NOTIFICATIONS</b>
+                <button class="mark-read-btn" onclick="markAllNotificationsRead()">Mark read</button>
+              </div>
+              <div class="notif-pop-list" id="notif-list-container">
+                <!-- Notifications injected via JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Replay Onboarding Button -->
+          <button class="btn btn-nyc-outline btn-sm replay-btn" onclick="openOnboardingModal()">
+            🔄 Onboarding
+          </button>
+
+          <!-- Profile Trigger -->
+          <div class="nyc-nav-profile" onclick="switchView('profile')">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="Arjun" class="nyc-avatar">
+            <span class="nyc-user-tag">ARJUN</span>
+          </div>
+
+        </div>
+
+      </div>
+    </header>
+
+    <!-- CONTINUOUS ELECTRIC MARQUEE TICKER -->
+    <div class="nyc-ticker-stream" aria-label="Live Activity Ticker">
+      <div class="nyc-ticker-track">
+        <div class="nyc-ticker-content">
+          <span class="ticker-pill">⚡ NOT YOUR COLLEGE</span>
+          <span>BUILD • SHIP • REPEAT</span>
+          <span class="ticker-pill">🏆 HACKATHON REGISTRATIONS OPEN</span>
+          <span>NO 80% ATTENDANCE RULES</span>
+          <span class="ticker-pill">🚀 1,290+ VERIFIED STUDENT REPOS</span>
+          <span>PEER CODE REVIEWS</span>
+          <span class="ticker-pill">💡 FIND YOUR CO-FOUNDER</span>
+          <span>100% HANDS-ON PROJECTS</span>
+        </div>
+        <!-- Cloned for seamless loop -->
+        <div class="nyc-ticker-content" aria-hidden="true">
+          <span class="ticker-pill">⚡ NOT YOUR COLLEGE</span>
+          <span>BUILD • SHIP • REPEAT</span>
+          <span class="ticker-pill">🏆 HACKATHON REGISTRATIONS OPEN</span>
+          <span>NO 80% ATTENDANCE RULES</span>
+          <span class="ticker-pill">🚀 1,290+ VERIFIED STUDENT REPOS</span>
+          <span>PEER CODE REVIEWS</span>
+          <span class="ticker-pill">💡 FIND YOUR CO-FOUNDER</span>
+          <span>100% HANDS-ON PROJECTS</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN VIEWS CONTAINER -->
+    <main class="nyc-main-content">
+
+      <!-- ==================================================
+           1. HOME VIEW (NYC AESTHETIC)
+           ================================================== -->
+      <section class="nyc-view active" id="view-home">
+        
+        <!-- HERO SECTION (BIG, BOLD, HIGH-OCTANE) -->
+        <div class="nyc-hero-section">
+          
+          <div class="hero-sticker-row">
+            <span class="sticker-tag rotate-left">🔥 BUILD-FIRST ECOSYSTEM</span>
+            <span class="sticker-tag yellow-tag rotate-right">⚡ 100% VERIFIED STUDENTS ONLY</span>
+          </div>
+
+          <h1 class="nyc-hero-headline">
+            DON’T JUST CONNECT.<br>
+            <span class="nyc-highlight-text">FIND SOMEONE TO BUILD WITH.</span>
+          </h1>
+
+          <div class="handwritten-annotation">
+            “Because college degrees don’t ship real code. Builders do! 🚀”
+          </div>
+
+          <p class="nyc-hero-sub">
+            The anti-boring student network for finding hackathon partners, following real-world developer roadmaps, sharing notes, and shipping open-source products across verified campus nodes.
+          </p>
+
+          <!-- Action CTAs -->
+          <div class="nyc-hero-cta-group">
+            <button class="btn btn-nyc-primary btn-xl" onclick="switchView('teams')">
+              🚀 FIND SOMEONE TO BUILD WITH <span class="arrow-sym">→</span>
+            </button>
+            <button class="btn btn-nyc-secondary btn-xl" onclick="switchView('roadmaps')">
+              🗺️ EXPLORE DEV ROADMAPS
+            </button>
+          </div>
+
+          <!-- Proof Stat Strip -->
+          <div class="nyc-hero-stats-grid mt-6">
+            <div class="hero-stat-card">
+              <div class="stat-num">14,800+</div>
+              <div class="stat-lbl">VERIFIED BUILDERS</div>
+            </div>
+            <div class="hero-stat-card">
+              <div class="stat-num">1,290+</div>
+              <div class="stat-lbl">SHIPPED PROJECTS</div>
+            </div>
+            <div class="hero-stat-card">
+              <div class="stat-num">94.2%</div>
+              <div class="stat-lbl">HACKATHON WIN RATE</div>
+            </div>
+            <div class="hero-stat-card">
+              <div class="stat-num">₹1.5L+</div>
+              <div class="stat-lbl">MONTHLY INTERN STIPENDS</div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- TRADITIONAL COLLEGE VS CAMPUSHUB BREAKDOWN MATRIX -->
+        <div class="nyc-matrix-section mt-8">
+          <div class="matrix-header text-center">
+            <span class="sticker-tag yellow-tag">🥊 REALITY CHECK</span>
+            <h2 class="matrix-title">TRADITIONAL COLLEGE VS. CAMPUSHUB</h2>
+            <p class="matrix-sub">Why 14,000+ students build on CampusHub instead of relying on outdated college syllabi.</p>
+          </div>
+
+          <div class="matrix-grid mt-6">
+            <!-- Left: Old College -->
+            <div class="matrix-col old-way">
+              <div class="col-badge bad-badge">❌ TRADITIONAL COLLEGE</div>
+              <ul class="matrix-list">
+                <li>Outdated 10-year-old curriculum (Turbo C++ & rote theory)</li>
+                <li>80% mandatory attendance without hands-on practice</li>
+                <li>Zero support finding real hackathon teammates</li>
+                <li>Generic mass placement drives with low conversion</li>
+                <li>Theory exams grading rote memorization over GitHub PRs</li>
+              </ul>
+            </div>
+
+            <!-- Right: CampusHub (The NYC Way) -->
+            <div class="matrix-col new-way nyc-box-shadow">
+              <div class="col-badge good-badge">⚡ CAMPUSHUB (THE NYC WAY)</div>
+              <ul class="matrix-list">
+                <li><b>Project-First Roadmaps:</b> Modern Fullstack, PyTorch AI, Next.js, and ROS2</li>
+                <li><b>Team Matching:</b> Connect with verified builders in 30 seconds</li>
+                <li><b>Live Hackathon Hub:</b> Compete in IEEE Ideathons and SIH 2026 with teams</li>
+                <li><b>Direct Referrals:</b> Alumni internship links at Microsoft, Amazon & startups</li>
+                <li><b>Peer Code Reviews & XP:</b> Earn reputation and proof-of-work badges</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- QUICK ACTION TILES (4 CARDS) -->
+        <div class="nyc-section-header mt-8">
+          <div>
+            <span class="section-kicker">QUICK JUMP</span>
+            <h3 class="section-main-title">EXPLORE THE CAMPUS SUBSYSTEMS</h3>
+          </div>
+        </div>
+
+        <div class="quick-tiles-grid mt-4">
+          
+          <div class="nyc-tile tile-teams" onclick="switchView('teams')">
+            <div class="tile-icon">🚀</div>
+            <div class="tile-info">
+              <h4 class="tile-title">Team Finder</h4>
+              <p class="tile-desc">Find teammates for SIH 2026, capstones, and AI startups.</p>
+            </div>
+            <span class="tile-action">Find Teammates →</span>
+          </div>
+
+          <div class="nyc-tile tile-roadmaps" onclick="switchView('roadmaps')">
+            <div class="tile-icon">🗺️</div>
+            <div class="tile-info">
+              <h4 class="tile-title">Skill Roadmaps</h4>
+              <p class="tile-desc">Curated project-based paths: Fullstack, AI, UI/UX & DevOps.</p>
+            </div>
+            <span class="tile-action">Start Path →</span>
+          </div>
+
+          <div class="nyc-tile tile-market" onclick="switchView('marketplace')">
+            <div class="tile-icon">🏷️</div>
+            <div class="tile-info">
+              <h4 class="tile-title">Student Marketplace</h4>
+              <p class="tile-desc">Buy & sell laptops, cycles, and DSA book bundles within campus.</p>
+            </div>
+            <span class="tile-action">Buy & Sell →</span>
+          </div>
+
+          <div class="nyc-tile tile-comm" onclick="switchView('communities')">
+            <div class="tile-icon">👥</div>
+            <div class="tile-info">
+              <h4 class="tile-title">Campus Communities</h4>
+              <p class="tile-desc">Join AI club, CSE department groups, and placement cells.</p>
+            </div>
+            <span class="tile-action">Join Hubs →</span>
+          </div>
+
+        </div>
+
+        <!-- SMART MATCHES & FEATURED ACTIVE TEAMS -->
+        <div class="nyc-dashboard-grid mt-8">
+          
+          <!-- Left: Smart AI Teammate Matches -->
+          <div class="dash-column">
+            <div class="col-head-row">
+              <div>
+                <span class="section-kicker">SMART MATCHING</span>
+                <h3 class="col-title">POTENTIAL BUILD PARTNERS</h3>
+              </div>
+              <button class="btn btn-nyc-outline btn-sm" onclick="switchView('teams')">View All →</button>
+            </div>
+
+            <div class="smart-matches-list mt-3" id="home-matches-container">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+
+          <!-- Right: Active Teams Needing Builders -->
+          <div class="dash-column">
+            <div class="col-head-row">
+              <div>
+                <span class="section-kicker">PROJECT OPENINGS</span>
+                <h3 class="col-title">TEAMS NEEDING BUILDERS</h3>
+              </div>
+              <button class="btn btn-nyc-outline btn-sm" onclick="switchView('teams')">Browse Teams →</button>
+            </div>
+
+            <div class="active-teams-feed mt-3" id="home-teams-container">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ==================================================
+           2. ROADMAPS VIEW (NYC SPECIAL FEATURE)
+           ================================================== -->
+      <section class="nyc-view" id="view-roadmaps">
+        
+        <div class="roadmaps-hero nyc-box-shadow">
+          <span class="sticker-tag yellow-tag rotate-left">🗺️ INDUSTRY READY PATHS</span>
+          <h1 class="page-title mt-2">PROJECT-BASED DEVELOPER ROADMAPS</h1>
+          <p class="page-subtitle">
+            Curated by senior engineers and top student builders. Each roadmap features step-by-step milestones, verified resource links, and real deployable projects.
+          </p>
+
+          <!-- Roadmap Track Selector -->
+          <div class="roadmap-track-tabs mt-4">
+            <button class="track-tab active" data-track="ai" onclick="switchRoadmapTrack('ai')">🤖 AI & Deep Learning</button>
+            <button class="track-tab" data-track="fullstack" onclick="switchRoadmapTrack('fullstack')">💻 Full-Stack SaaS (Next.js)</button>
+            <button class="track-tab" data-track="design" onclick="switchRoadmapTrack('design')">🎨 UI/UX & Product Design</button>
+            <button class="track-tab" data-track="devops" onclick="switchRoadmapTrack('devops')">☁️ Cloud & DevOps</button>
+          </div>
+        </div>
+
+        <!-- Roadmap Content Container -->
+        <div class="roadmap-timeline-container mt-6" id="roadmap-timeline-container">
+          <!-- Rendered via JS -->
+        </div>
+
+      </section>
+
+
+      <!-- ==================================================
+           3. TEAM FINDER (HERO PRODUCT FEATURE)
+           ================================================== -->
+      <section class="nyc-view" id="view-teams">
+        
+        <div class="tf-hero-card nyc-box-shadow">
+          <div class="hero-sticker-row">
+            <span class="sticker-tag yellow-tag rotate-left">⚡ HERO FEATURE</span>
+            <span class="sticker-tag rotate-right">👥 BUILD YOUR PERFECT SQUAD</span>
+          </div>
+
+          <h1 class="page-title mt-2">FIND SOMEONE TO BUILD WITH</h1>
+          <p class="page-subtitle">
+            Find hackathon teammates, AI/ML collaborators, frontend developers, and co-founders within your verified campus network.
+          </p>
+
+          <!-- Smart Query Box -->
+          <div class="nyc-smart-search-box mt-4">
+            <input type="text" id="teams-search-input" class="nyc-search-input" placeholder="Search roles or skills (e.g. 'Frontend Developer', 'ML Engineer', 'Python', 'UI/UX')...">
+            <button class="btn btn-nyc-primary" onclick="executeTeamSearch()">
+              SEARCH BUILDERS <span class="arrow-sym">→</span>
+            </button>
+          </div>
+
+          <!-- Role Filter Chips with Neo-Brutalist styling -->
+          <div class="nyc-role-filters mt-4">
+            <span class="filter-lbl">FILTER BY ROLE:</span>
+            <button class="role-chip active" data-role="all">All Roles</button>
+            <button class="role-chip" data-role="Frontend Developer">Frontend Dev</button>
+            <button class="role-chip" data-role="Backend Developer">Backend Dev</button>
+            <button class="role-chip" data-role="ML Engineer">ML Engineer</button>
+            <button class="role-chip" data-role="UI/UX Designer">UI/UX Designer</button>
+            <button class="role-chip" data-role="Data Scientist">Data Scientist</button>
+            <button class="role-chip" data-role="Testing">Testing</button>
+            <button class="role-chip" data-role="Marketing">Marketing</button>
+          </div>
+        </div>
+
+        <!-- Smart Matching AI Results (Appears on search) -->
+        <div class="smart-match-results-section mt-6" id="smart-match-results-section" style="display: none;">
+          <div class="sm-header-banner">
+            <div class="sm-banner-title">
+              <span>🤖 SMART MATCHING CANDIDATES FOR:</span> <b id="sm-query-display">"Python Developer"</b>
+            </div>
+            <button class="btn btn-nyc-outline btn-sm" onclick="clearSmartMatchResults()">Clear Matches ✕</button>
+          </div>
+          <div class="sm-results-grid mt-3" id="smart-match-results-grid">
+            <!-- Rendered via JS -->
+          </div>
+        </div>
+
+        <!-- Project Cards Grid -->
+        <div class="teams-cards-grid mt-6" id="teams-cards-grid">
+          <!-- Rendered via JS -->
+        </div>
+
+      </section>
+
+
+      <!-- ==================================================
+           4. COMMUNITIES VIEW
+           ================================================== -->
+      <section class="nyc-view" id="view-communities">
+        
+        <div class="page-title-banner">
+          <div>
+            <span class="sticker-tag yellow-tag">🏛️ CAMPUS HUBS</span>
+            <h1 class="page-title mt-1">CAMPUS COMMUNITIES</h1>
+            <p class="page-subtitle">Join student-run clubs, departmental groups, and placement cells.</p>
+          </div>
+          <button class="btn btn-nyc-primary" onclick="openCreateMenuModal()">
+            + CREATE COMMUNITY
+          </button>
+        </div>
+
+        <div class="filter-toolbar mt-4">
+          <div class="search-input-wrap">
+            <input type="text" id="community-search-input" class="search-field" placeholder="Search clubs (e.g. AI Club, CSE, Hostel)...">
+          </div>
+
+          <div class="category-pills" id="community-category-pills">
+            <button class="cat-pill active" data-cat="all">All</button>
+            <button class="cat-pill" data-cat="General">General</button>
+            <button class="cat-pill" data-cat="CSE">CSE</button>
+            <button class="cat-pill" data-cat="AI Club">AI Club</button>
+            <button class="cat-pill" data-cat="Hostel">Hostel</button>
+            <button class="cat-pill" data-cat="Placements">Placements</button>
+            <button class="cat-pill" data-cat="Lost & Found">Lost & Found</button>
+          </div>
+        </div>
+
+        <div class="communities-grid mt-4" id="communities-grid">
+          <!-- Rendered via JS -->
+        </div>
+
+        <div class="community-detail-container" id="community-detail-container" style="display: none;">
+          <!-- Detail View injected via JS -->
+        </div>
+
+      </section>
+
+
+      <!-- ==================================================
+           5. DISCUSSIONS FEED VIEW
+           ================================================== -->
+      <section class="nyc-view" id="view-discussions">
+        
+        <div class="page-title-banner">
+          <div>
+            <span class="sticker-tag yellow-tag">💬 UNCENSORED PEER FEED</span>
+            <h1 class="page-title mt-1">CAMPUS DISCUSSIONS</h1>
+            <p class="page-subtitle">Ask questions, share placement tips, discuss midterm papers, and talk campus life.</p>
+          </div>
+          <button class="btn btn-nyc-primary" onclick="openCreatePostModal()">
+            ✍️ CREATE POST
+          </button>
+        </div>
+
+        <!-- In-Page Create Post Card -->
+        <div class="quick-create-post-card nyc-box-shadow mt-4">
+          <div class="qc-header">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" class="qc-avatar" alt="Arjun">
+            <input type="text" class="qc-input" placeholder="What are you building or asking today, Arjun?" onclick="openCreatePostModal()">
+          </div>
+          <div class="qc-actions">
+            <button class="qc-action-btn" onclick="openCreatePostModal()">📷 Image</button>
+            <button class="qc-action-btn" onclick="openCreatePostModal()">📊 Poll</button>
+            <button class="qc-action-btn" onclick="openCreatePostModal()">🏷️ Tag</button>
+            <button class="qc-action-btn" onclick="openCreatePostModal()">🎭 Post Anonymously</button>
+            <button class="btn btn-nyc-primary btn-sm ml-auto" onclick="openCreatePostModal()">Publish →</button>
+          </div>
+        </div>
+
+        <!-- Filter Tags -->
+        <div class="category-pills mt-4" id="discussion-category-pills">
+          <button class="cat-pill active" data-cat="all">All Topics</button>
+          <button class="cat-pill" data-cat="Academic">Academic</button>
+          <button class="cat-pill" data-cat="Placement">Placement</button>
+          <button class="cat-pill" data-cat="Projects">Projects</button>
+          <button class="cat-pill" data-cat="Hackathons">Hackathons</button>
+          <button class="cat-pill" data-cat="Campus Life">Campus Life</button>
+          <button class="cat-pill" data-cat="General">General</button>
+        </div>
+
+        <div class="discussions-feed-list mt-4" id="discussions-feed-list">
+          <!-- Rendered via JS -->
+        </div>
+
+      </section>
+
+
+      <!-- ==================================================
+           6. EVENTS & HACKATHONS VIEW
+           ================================================== -->
+      <section class="nyc-view" id="view-events">
+        
+        <div class="page-title-banner">
+          <div>
+            <span class="sticker-tag yellow-tag">🏆 COMPETITION PORTAL</span>
+            <h1 class="page-title mt-1">HACKATHONS & EVENTS</h1>
+            <p class="page-subtitle">Register for 24-hour sprints, ideathons, and hardware building jams.</p>
+          </div>
+          <button class="btn btn-nyc-primary" onclick="openCreateMenuModal()">
+            + HOST EVENT
+          </button>
+        </div>
+
+        <div class="category-pills mt-4" id="events-category-pills">
+          <button class="cat-pill active" data-cat="all">All Events</button>
+          <button class="cat-pill" data-cat="Hackathons">Hackathons</button>
+          <button class="cat-pill" data-cat="Workshops">Workshops</button>
+          <button class="cat-pill" data-cat="Competitions">Competitions</button>
+          <button class="cat-pill" data-cat="Webinars">Webinars</button>
+        </div>
+
+        <div class="events-grid mt-4" id="events-grid">
+          <!-- Rendered via JS -->
+        </div>
+
+      </section>
+
+
+      <!-- ==================================================
+           7. MARKETPLACE VIEW (“Buy. Sell. Save.”)
+           ================================================== -->
+      <section class="nyc-view" id="view-marketplace">
+        
+        <div class="page-title-banner">
+          <div>
+            <span class="sticker-tag yellow-tag">🏷️ PEER BAZAAR</span>
+            <h1 class="page-title mt-1">CAMPUS MARKETPLACE</h1>
+            <p class="page-subtitle">Buy. Sell. Save. Zero commissions, direct student-to-student handover.</p>
+          </div>
+          <button class="btn btn-nyc-primary" onclick="openSellItemModal()">
+            🏷️ SELL ITEM
+          </button>
+        </div>
+
+        <div class="filter-toolbar mt-4">
+          <div class="search-input-wrap">
+            <input type="text" id="market-search-input" class="search-field" placeholder="Search laptops, cycles, books...">
+          </div>
+
+          <div class="category-pills" id="market-category-pills">
+            <button class="cat-pill active" data-cat="all">All</button>
+            <button class="cat-pill" data-cat="Books">Books</button>
+            <button class="cat-pill" data-cat="Laptop">Laptop</button>
+            <button class="cat-pill" data-cat="Cycle">Cycle</button>
+            <button class="cat-pill" data-cat="Electronics">Electronics</button>
+            <button class="cat-pill" data-cat="Other">Other</button>
+          </div>
+        </div>
+
+        <div class="marketplace-grid mt-4" id="marketplace-grid">
+          <!-- Rendered via JS -->
+        </div>
+
+      </section>
+
+
+      <!-- ==================================================
+           8. STUDENT PROFILE VIEW
+           ================================================== -->
+      <section class="nyc-view" id="view-profile">
+        
+        <div class="profile-hero-card nyc-box-shadow">
+          <div class="profile-banner nyc-banner-gradient"></div>
+          
+          <div class="profile-hero-body">
+            <div class="profile-avatar-row">
+              <div class="profile-avatar-wrap">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80" alt="Arjun" class="profile-avatar-img">
+                <span class="profile-verified-badge">✓</span>
+              </div>
+              <div class="profile-hero-actions">
+                <button class="btn btn-nyc-outline btn-sm" onclick="openEditProfileModal()">✏️ Edit Profile</button>
+                <button class="btn btn-nyc-primary btn-sm" onclick="showToast('Profile share link copied!')">Share Profile</button>
+              </div>
+            </div>
+
+            <div class="profile-identity">
+              <div class="profile-name-row">
+                <h1 class="profile-full-name" id="prof-name">Arjun Sharma</h1>
+                <span class="verified-student-tag">✓ Verified Student</span>
+              </div>
+              <div class="profile-college-line" id="prof-college-line">CGC Landran • Computer Science Engineering • 3rd Year</div>
+              <p class="profile-bio-text" id="prof-bio">
+                Passionate full-stack developer & ML enthusiast. Building scalable web apps and AI-driven tools. Always open for hackathon collaborations and startup capstone projects.
+              </p>
+            </div>
+
+            <div class="profile-stats-strip">
+              <div class="p-stat-item">
+                <span class="p-stat-val">128</span>
+                <span class="p-stat-lbl">POSTS</span>
+              </div>
+              <div class="p-stat-item">
+                <span class="p-stat-val">2.4K</span>
+                <span class="p-stat-lbl">BUILD XP</span>
+              </div>
+              <div class="p-stat-item">
+                <span class="p-stat-val">12</span>
+                <span class="p-stat-lbl">BADGES</span>
+              </div>
+              <div class="p-stat-item">
+                <span class="p-stat-val">6</span>
+                <span class="p-stat-lbl">REPOS SHIPPED</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="profile-content-grid mt-6">
+          <div class="profile-left-col">
+            <div class="p-card nyc-box-shadow">
+              <h3 class="p-card-title">TECHNICAL SKILLS</h3>
+              <div class="chips-grid mt-3">
+                <span class="skill-chip active">Python</span>
+                <span class="skill-chip active">React.js</span>
+                <span class="skill-chip active">Machine Learning</span>
+                <span class="skill-chip active">FastAPI</span>
+                <span class="skill-chip active">UI/UX Design</span>
+                <span class="skill-chip active">Tailwind CSS</span>
+              </div>
+            </div>
+
+            <div class="p-card nyc-box-shadow mt-4">
+              <h3 class="p-card-title">LOOKING FOR</h3>
+              <div class="bullet-list mt-3">
+                <div class="bullet-item">🚀 <b>Hackathon teammates</b> for Smart India Hackathon 2026</div>
+                <div class="bullet-item">💡 <b>Startup co-founder</b> for AI campus product</div>
+                <div class="bullet-item">👥 <b>Project partner</b> for final year capstone</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="profile-right-col">
+            <div class="p-card nyc-box-shadow">
+              <div class="section-header-row">
+                <h3 class="p-card-title">FEATURED REPOSITORIES</h3>
+                <button class="btn btn-sm btn-nyc-outline" onclick="openCreateMenuModal()">+ Add Project</button>
+              </div>
+
+              <div class="projects-list mt-3">
+                <div class="project-item-card">
+                  <div class="project-header">
+                    <h4 class="project-title">AI Study Notes Summarizer</h4>
+                    <span class="badge-status-shipped">Shipped</span>
+                  </div>
+                  <p class="project-desc">Automated flashcards and concise multi-tier revision notes from lecture PDFs.</p>
+                  <div class="project-meta-row">
+                    <div class="project-tags">
+                      <span class="p-tag">Python</span>
+                      <span class="p-tag">FastAPI</span>
+                      <span class="p-tag">React</span>
+                    </div>
+                    <a href="https://github.com" target="_blank" class="github-link">GitHub Repo ↗</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+
+  <!-- ==================================================
+       SLIDE-OVER DIRECT MESSAGING & CHAT DRAWER
+       ================================================== -->
+  <div id="chat-drawer" class="chat-drawer-overlay">
+    <div class="chat-drawer-backdrop" onclick="closeChatDrawer()"></div>
+    <div class="chat-drawer-window nyc-box-shadow">
+      
+      <div class="chat-drawer-header">
+        <div>
+          <span class="drawer-title">PEER MESSAGES</span>
+          <span class="drawer-sub">Direct chat with verified campus builders</span>
+        </div>
+        <button class="close-drawer-btn" onclick="closeChatDrawer()">✕</button>
+      </div>
+
+      <div class="chat-drawer-body">
+        <div class="conversations-sidebar" id="conversations-sidebar">
+          <!-- Injected via JS -->
+        </div>
+
+        <div class="active-chat-container">
+          <div class="active-chat-header" id="active-chat-header">
+            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&auto=format&fit=crop&q=80" alt="Peer" class="peer-avatar" id="active-peer-avatar">
+            <div>
+              <div class="peer-name" id="active-peer-name">Rahul Sharma</div>
+              <div class="peer-status" id="active-peer-status">Online • CSE 3rd Year</div>
+            </div>
+          </div>
+
+          <div class="chat-messages-area" id="chat-messages-area">
+            <!-- Messages injected via JS -->
+          </div>
+
+          <form class="chat-input-row" onsubmit="handleSendChatMessage(event)">
+            <input type="text" id="chat-text-input" class="chat-input-field" placeholder="Type a message..." autocomplete="off">
+            <button type="submit" class="btn btn-nyc-primary btn-sm">SEND →</button>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ==================================================
+       MODALS: TEAM DETAILS & APPLY TO TEAM
+       ================================================== -->
+  <div id="team-details-modal" class="app-modal">
+    <div class="modal-backdrop" onclick="closeModal('team-details-modal')"></div>
+    <div class="modal-card nyc-box-shadow">
+      <div class="modal-header">
+        <div>
+          <span class="modal-kicker" id="td-kicker">HACKATHON PROJECT</span>
+          <h2 class="modal-title" id="td-title">AI Study Assistant</h2>
+        </div>
+        <button class="modal-close" onclick="closeModal('team-details-modal')">✕</button>
+      </div>
+
+      <div class="modal-body" id="td-body">
+        <!-- Injected via JS -->
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-nyc-outline" onclick="closeModal('team-details-modal')">Close</button>
+        <button class="btn btn-nyc-primary" id="td-apply-btn" onclick="openApplyToTeamModal()">
+          Apply to Join Team →
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- APPLY TO TEAM MODAL -->
+  <div id="apply-team-modal" class="app-modal">
+    <div class="modal-backdrop" onclick="closeModal('apply-team-modal')"></div>
+    <div class="modal-card nyc-box-shadow">
+      <div class="modal-header">
+        <div>
+          <span class="modal-kicker">TEAM APPLICATION</span>
+          <h2 class="modal-title" id="apply-team-title">Apply to Join Team</h2>
+        </div>
+        <button class="modal-close" onclick="closeModal('apply-team-modal')">✕</button>
+      </div>
+
+      <form class="modal-body" onsubmit="handleTeamApplicationSubmit(event)">
+        <div class="form-group">
+          <label class="form-label">Applying for Role</label>
+          <select class="form-select" id="apply-role-select" required>
+            <option value="ML Engineer">ML Engineer</option>
+            <option value="Frontend Developer">Frontend Developer</option>
+            <option value="UI/UX Designer">UI/UX Designer</option>
+            <option value="Backend Developer">Backend Developer</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Why do you want to join this project?</label>
+          <textarea class="form-textarea" id="apply-reason-text" rows="3" required>I have hands-on experience building ML pipelines with PyTorch and FastAPI, and I'd love to help develop the note summarization module for this hackathon!</textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Portfolio / GitHub Link</label>
+          <input type="url" class="form-input" id="apply-link-input" value="https://github.com/arjun-sharma" required>
+        </div>
+
+        <div class="modal-footer px-0 pb-0">
+          <button type="button" class="btn btn-nyc-outline" onclick="closeModal('apply-team-modal')">Cancel</button>
+          <button type="submit" class="btn btn-nyc-primary">Submit Application →</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- ==================================================
+       MODALS: EVENT DETAILS & SUCCESS
+       ================================================== -->
+  <div id="event-details-modal" class="app-modal">
+    <div class="modal-backdrop" onclick="closeModal('event-details-modal')"></div>
+    <div class="modal-card nyc-box-shadow">
+      <div class="modal-header">
+        <div>
+          <span class="modal-kicker" id="ed-type">HACKATHON</span>
+          <h2 class="modal-title" id="ed-title">IEEE Ideathon 2026</h2>
+        </div>
+        <button class="modal-close" onclick="closeModal('event-details-modal')">✕</button>
+      </div>
+
+      <div class="modal-body" id="ed-body">
+        <!-- Injected via JS -->
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-nyc-outline" onclick="closeModal('event-details-modal')">Back</button>
+        <button class="btn btn-nyc-primary" id="ed-register-btn" onclick="handleEventRegistration()">
+          REGISTER NOW →
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="event-success-modal" class="app-modal">
+    <div class="modal-backdrop" onclick="closeModal('event-success-modal')"></div>
+    <div class="modal-card nyc-box-shadow text-center">
+      <div class="success-icon-wrap mt-2">🎉</div>
+      <h2 class="modal-title mt-3">YOU’RE REGISTERED!</h2>
+      <p class="text-secondary mt-2" id="event-success-msg">
+        Your registration for <b>IEEE Ideathon 2026</b> has been confirmed.
+      </p>
+
+      <div class="btn-stack mt-6">
+        <button class="btn btn-nyc-primary w-full" onclick="showToast('Added to Google Calendar!'); closeModal('event-success-modal');">
+          📅 Add to Calendar
+        </button>
+        <button class="btn btn-nyc-secondary w-full" onclick="closeModal('event-success-modal'); switchView('teams');">
+          🚀 Find Teammates for this Event
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ==================================================
+       MODALS: PRODUCT DETAILS & SELL ITEM
+       ================================================== -->
+  <div id="product-details-modal" class="app-modal">
+    <div class="modal-backdrop" onclick="closeModal('product-details-modal')"></div>
+    <div class="modal-card nyc-box-shadow">
+      <div class="modal-header">
+        <div>
+          <span class="modal-kicker">MARKETPLACE ITEM</span>
+          <h2 class="modal-title" id="pd-title">HP Pavilion 15 Laptop</h2>
+        </div>
+        <button class="modal-close" onclick="closeModal('product-details-modal')">✕</button>
+      </div>
+
+      <div class="modal-body" id="pd-body">
+        <!-- Injected via JS -->
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn btn-nyc-outline" id="pd-chat-btn" onclick="startSellerChatFromModal()">
+          💬 Chat with Seller
+        </button>
+        <button class="btn btn-nyc-primary" onclick="showToast('Order request sent!'); closeModal('product-details-modal');">
+          Buy Now →
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="sell-item-modal" class="app-modal">
+    <div class="modal-backdrop" onclick="closeModal('sell-item-modal')"></div>
+    <div class="modal-card nyc-box-shadow">
+      <div class="modal-header">
+        <div>
+          <span class="modal-kicker">LIST AN ITEM</span>
+          <h2 class="modal-title">Sell on Campus Marketplace</h2>
+        </div>
+        <button class="modal-close" onclick="closeModal('sell-item-modal')">✕</button>
+      </div>
+
+      <form class="modal-body" onsubmit="handleSellItemSubmit(event)">
+        <div class="form-group">
+          <label class="form-label">Item Title</label>
+          <input type="text" class="form-input" id="sell-title" placeholder="e.g. HP Pavilion 15 Laptop" required>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label class="form-label">Category</label>
+            <select class="form-select" id="sell-category" required>
+              <option value="Books">Books</option>
+              <option value="Laptop">Laptop</option>
+              <option value="Cycle">Cycle</option>
+              <option value="Electronics">Electronics</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Price (₹)</label>
+            <input type="number" class="form-input" id="sell-price" placeholder="e.g. 25000" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <textarea class="form-textarea" id="sell-desc" rows="3" required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Photo URL</label>
+          <input type="url" class="form-input" id="sell-img" value="https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=600&auto=format&fit=crop&q=80">
+        </div>
+
+        <div class="modal-footer px-0 pb-0">
+          <button type="button" class="btn btn-nyc-outline" onclick="closeModal('sell-item-modal')">Cancel</button>
+          <button type="submit" class="btn btn-nyc-primary">Post Item →</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- ==================================================
+       MODALS: CREATE POST & GLOBAL MENU
+       ================================================== -->
+  <div id="create-post-modal" class="app-modal">
+    <div class="modal-backdrop" onclick="closeModal('create-post-modal')"></div>
+    <div class="modal-card nyc-box-shadow">
+      <div class="modal-header">
+        <div>
+          <span class="modal-kicker">CAMPUS FEED</span>
+          <h2 class="modal-title">Create Post</h2>
+        </div>
+        <button class="modal-close" onclick="closeModal('create-post-modal')">✕</button>
+      </div>
+
+      <form class="modal-body" onsubmit="handleCreatePostSubmit(event)">
+        <div class="post-identity-toggle">
+          <label class="toggle-pill active" id="pill-real-name" onclick="togglePostIdentity('real')">
+            <span>👤</span> Real Name (Arjun)
+          </label>
+          <label class="toggle-pill" id="pill-anon-name" onclick="togglePostIdentity('anon')">
+            <span>🎭</span> Anonymous
+          </label>
+        </div>
+
+        <div class="form-group mt-3">
+          <label class="form-label">Category</label>
+          <select class="form-select" id="new-post-cat">
+            <option value="Placement">Placement & Internships</option>
+            <option value="Academic">Academic & Syllabi</option>
+            <option value="Projects">Projects & Coding</option>
+            <option value="Hackathons">Hackathons</option>
+            <option value="Campus Life">Campus Life</option>
+            <option value="General">General</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">What’s on your mind?</label>
+          <textarea class="form-textarea" id="new-post-content" rows="4" required></textarea>
+        </div>
+
+        <div class="modal-footer px-0 pb-0">
+          <button type="button" class="btn btn-nyc-outline" onclick="closeModal('create-post-modal')">Cancel</button>
+          <button type="submit" class="btn btn-nyc-primary">Publish →</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="create-menu-modal" class="app-modal">
+    <div class="modal-backdrop" onclick="closeModal('create-menu-modal')"></div>
+    <div class="modal-card max-w-md nyc-box-shadow">
+      <div class="modal-header">
+        <h2 class="modal-title">What do you want to create?</h2>
+        <button class="modal-close" onclick="closeModal('create-menu-modal')">✕</button>
+      </div>
+      <div class="create-menu-grid">
+        <div class="create-option-card" onclick="closeModal('create-menu-modal'); openCreatePostModal();">
+          <div class="c-opt-icon">💬</div>
+          <div>
+            <div class="c-opt-title">Create Post</div>
+            <div class="c-opt-desc">Share doubts or placement insights</div>
+          </div>
+        </div>
+
+        <div class="create-option-card" onclick="closeModal('create-menu-modal'); switchView('teams');">
+          <div class="c-opt-icon">🚀</div>
+          <div>
+            <div class="c-opt-title">Find Someone to Build With</div>
+            <div class="c-opt-desc">Find teammates for hackathons & projects</div>
+          </div>
+        </div>
+
+        <div class="create-option-card" onclick="closeModal('create-menu-modal'); openSellItemModal();">
+          <div class="c-opt-icon">🏷️</div>
+          <div>
+            <div class="c-opt-title">Sell Item</div>
+            <div class="c-opt-desc">List on student marketplace</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ==================================================
+       MODALS: EDIT PROFILE
+       ================================================== -->
+  <div id="edit-profile-modal" class="app-modal">
+    <div class="modal-backdrop" onclick="closeModal('edit-profile-modal')"></div>
+    <div class="modal-card nyc-box-shadow">
+      <div class="modal-header">
+        <div>
+          <span class="modal-kicker">PROFILE SETTINGS</span>
+          <h2 class="modal-title">Edit Profile Information</h2>
+        </div>
+        <button class="modal-close" onclick="closeModal('edit-profile-modal')">✕</button>
+      </div>
+
+      <form class="modal-body" onsubmit="handleProfileUpdateSubmit(event)">
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <input type="text" class="form-input" id="edit-prof-name" value="Arjun Sharma" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">College</label>
+          <input type="text" class="form-input" id="edit-prof-college" value="CGC Landran" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Bio</label>
+          <textarea class="form-textarea" id="edit-prof-bio" rows="3">Passionate full-stack developer & ML enthusiast. Building scalable web apps and AI-driven tools.</textarea>
+        </div>
+
+        <div class="modal-footer px-0 pb-0">
+          <button type="button" class="btn btn-nyc-outline" onclick="closeModal('edit-profile-modal')">Cancel</button>
+          <button type="submit" class="btn btn-nyc-primary">Save Changes →</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="app-toast" class="app-toast nyc-box-shadow" role="status" aria-live="polite">
+    <span class="toast-icon">⚡</span>
+    <span class="toast-msg" id="toast-msg">Operation completed.</span>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,2312 @@
+/* ==================================================
+   CAMPUSHUB — NOT YOUR COLLEGE (NYC) DESIGN SYSTEM
+   Inspired by notyourcollege.com by Sheryians
+   ================================================== */
+
+:root {
+  /* Electric NYC Color Palette */
+  --nyc-blue: #0038ff;
+  --nyc-blue-dark: #0026b3;
+  --nyc-blue-light: #f0f3ff;
+  --nyc-blue-border: #ccd7ff;
+
+  --nyc-yellow: #fff600;
+  --nyc-lime: #d6f200;
+  --nyc-red: #ef5442;
+  --nyc-red-light: #fff0f1;
+
+  --nyc-bg: #f4f7fc;
+  --nyc-surface: #ffffff;
+  --nyc-surface-subtle: #f8fafc;
+
+  --nyc-text-main: #0a0f29;
+  --nyc-text-secondary: #334155;
+  --nyc-text-muted: #64748b;
+  --nyc-text-light: #94a3b8;
+  --nyc-text-white: #ffffff;
+
+  --nyc-border: #000000;
+  --nyc-border-subtle: #e2e8f0;
+
+  /* Typography */
+  --font-display: 'Staatliches', Impact, sans-serif;
+  --font-sans: 'Poppins', 'Plus Jakarta Sans', sans-serif;
+  --font-hand: 'Caveat', cursive, sans-serif;
+
+  /* Neo-Brutalist Dimensions & Shadows */
+  --nyc-border-width: 2px;
+  --nyc-radius-sm: 6px;
+  --nyc-radius-md: 10px;
+  --nyc-radius-lg: 14px;
+  --nyc-radius-xl: 20px;
+  --nyc-radius-full: 9999px;
+
+  --shadow-offset: 4px 4px 0px #000000;
+  --shadow-offset-blue: 4px 4px 0px #0038ff;
+  --shadow-offset-yellow: 4px 4px 0px #fff600;
+  --shadow-offset-hover: 2px 2px 0px #000000;
+
+  --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* BASE RESET */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+}
+
+body.nyc-body {
+  font-family: var(--font-sans);
+  background-color: var(--nyc-bg);
+  color: var(--nyc-text-main);
+  line-height: 1.5;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6, .splash-title, .page-title, .modal-title, .matrix-title, .col-title {
+  font-family: var(--font-display);
+  letter-spacing: 0.04em;
+  color: var(--nyc-text-main);
+}
+
+/* NEO-BRUTALIST OFFSET SHADOW CLASS */
+.nyc-box-shadow {
+  border: var(--nyc-border-width) solid var(--nyc-border);
+  box-shadow: var(--shadow-offset);
+}
+
+/* STICKER TAGS & HANDWRITTEN ANNOTATIONS */
+.sticker-tag {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  padding: 0.25rem 0.65rem;
+  background-color: var(--nyc-blue);
+  color: var(--nyc-text-white);
+  border: 1.5px solid var(--nyc-border);
+  border-radius: var(--nyc-radius-sm);
+  box-shadow: 2px 2px 0px var(--nyc-border);
+  transform-origin: center;
+}
+
+.sticker-tag.yellow-tag {
+  background-color: var(--nyc-yellow);
+  color: var(--nyc-text-main);
+}
+
+.sticker-tag.rotate-left {
+  transform: rotate(-3deg);
+}
+
+.sticker-tag.rotate-right {
+  transform: rotate(3deg);
+}
+
+.handwritten-annotation, .handwritten-scribble {
+  font-family: var(--font-hand);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--nyc-blue);
+  line-height: 1.2;
+}
+
+/* UTILITY CLASSES */
+.text-center { text-align: center; }
+.w-full { width: 100%; }
+.mt-1 { margin-top: 0.25rem; }
+.mt-2 { margin-top: 0.5rem; }
+.mt-3 { margin-top: 0.75rem; }
+.mt-4 { margin-top: 1rem; }
+.mt-6 { margin-top: 1.5rem; }
+.mt-8 { margin-top: 2rem; }
+.mb-2 { margin-bottom: 0.5rem; }
+.mb-4 { margin-bottom: 1rem; }
+.ml-auto { margin-left: auto; }
+.px-0 { padding-left: 0 !important; padding-right: 0 !important; }
+.pb-0 { padding-bottom: 0 !important; }
+.text-sm { font-size: 0.875rem; }
+.text-xs { font-size: 0.75rem; }
+.text-muted { color: var(--nyc-text-muted); }
+.text-secondary { color: var(--nyc-text-secondary); }
+.font-bold { font-weight: 700; }
+.flex { display: flex; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.gap-2 { gap: 0.5rem; }
+.gap-3 { gap: 0.75rem; }
+.gap-4 { gap: 1rem; }
+.flex-1 { flex: 1; }
+
+/* ==================================================
+   BUTTONS (NYC / NEO-BRUTALIST STYLE)
+   ================================================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  letter-spacing: 0.05em;
+  padding: 0.65rem 1.4rem;
+  border-radius: var(--nyc-radius-md);
+  border: var(--nyc-border-width) solid var(--nyc-border);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all var(--transition-fast);
+  line-height: 1.1;
+}
+
+.btn-nyc-primary {
+  background-color: var(--nyc-blue);
+  color: var(--nyc-text-white);
+  box-shadow: var(--shadow-offset);
+}
+
+.btn-nyc-primary:hover {
+  background-color: var(--nyc-blue-dark);
+  transform: translate(2px, 2px);
+  box-shadow: var(--shadow-offset-hover);
+}
+
+.btn-nyc-secondary {
+  background-color: var(--nyc-yellow);
+  color: var(--nyc-text-main);
+  box-shadow: var(--shadow-offset);
+}
+
+.btn-nyc-secondary:hover {
+  background-color: var(--nyc-lime);
+  transform: translate(2px, 2px);
+  box-shadow: var(--shadow-offset-hover);
+}
+
+.btn-nyc-outline {
+  background-color: var(--nyc-surface);
+  color: var(--nyc-text-main);
+  box-shadow: var(--shadow-offset);
+}
+
+.btn-nyc-outline:hover {
+  background-color: var(--nyc-surface-subtle);
+  transform: translate(2px, 2px);
+  box-shadow: var(--shadow-offset-hover);
+}
+
+.btn-lg {
+  padding: 0.85rem 1.6rem;
+  font-size: 1.15rem;
+}
+
+.btn-xl {
+  padding: 1rem 2rem;
+  font-size: 1.25rem;
+}
+
+.btn-sm {
+  padding: 0.35rem 0.85rem;
+  font-size: 0.85rem;
+  border-radius: var(--nyc-radius-sm);
+}
+
+.btn-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* ==================================================
+   STICKY NYC TOP NAVIGATION BAR
+   ================================================== */
+.nyc-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: var(--nyc-border-width) solid var(--nyc-border);
+  height: 64px;
+}
+
+.nyc-nav-container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.nyc-brand-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  cursor: pointer;
+}
+
+.nyc-logo-icon {
+  font-size: 1.5rem;
+}
+
+.nyc-logo-text {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+.nyc-logo-title {
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  letter-spacing: 0.06em;
+  color: var(--nyc-blue);
+}
+
+.nyc-logo-badge {
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  background-color: var(--nyc-yellow);
+  color: var(--nyc-text-main);
+  padding: 0.1rem 0.35rem;
+  border: 1px solid var(--nyc-border);
+  border-radius: var(--nyc-radius-sm);
+}
+
+/* Nav Links */
+.nyc-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.nyc-nav-link {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  letter-spacing: 0.05em;
+  color: var(--nyc-text-secondary);
+  text-decoration: none;
+  padding: 0.35rem 0.5rem;
+  border-radius: var(--nyc-radius-sm);
+  transition: all var(--transition-fast);
+}
+
+.nyc-nav-link:hover {
+  color: var(--nyc-blue);
+  background-color: var(--nyc-blue-light);
+}
+
+.nyc-nav-link.active {
+  color: var(--nyc-blue);
+  background-color: var(--nyc-blue-light);
+  border: 1.5px solid var(--nyc-blue);
+}
+
+.nyc-nav-link.hero-link {
+  color: var(--nyc-blue);
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.live-pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--nyc-red);
+  box-shadow: 0 0 6px var(--nyc-red);
+  animation: pulse-dot 1.5s infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.3); opacity: 0.5; }
+}
+
+/* Nav Actions */
+.nyc-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.nyc-xp-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  background-color: var(--nyc-yellow);
+  border: 1.5px solid var(--nyc-border);
+  border-radius: var(--nyc-radius-full);
+  padding: 0.25rem 0.65rem;
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  box-shadow: 2px 2px 0px var(--nyc-border);
+}
+
+.nyc-icon-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--nyc-radius-md);
+  border: 1.5px solid var(--nyc-border);
+  background-color: var(--nyc-surface);
+  box-shadow: 2px 2px 0px var(--nyc-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  cursor: pointer;
+  position: relative;
+  transition: all var(--transition-fast);
+}
+
+.nyc-icon-btn:hover {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0px var(--nyc-border);
+}
+
+.nyc-btn-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 16px;
+  height: 16px;
+  background-color: var(--nyc-red);
+  color: var(--nyc-text-white);
+  border-radius: var(--nyc-radius-full);
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--nyc-border);
+}
+
+.nyc-nav-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.25rem 0.6rem 0.25rem 0.25rem;
+  background-color: var(--nyc-surface);
+  border: 1.5px solid var(--nyc-border);
+  border-radius: var(--nyc-radius-full);
+  box-shadow: 2px 2px 0px var(--nyc-border);
+  cursor: pointer;
+}
+
+.nyc-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.nyc-user-tag {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  color: var(--nyc-text-main);
+}
+
+/* ==================================================
+   CONTINUOUS MARQUEE STREAM
+   ================================================== */
+.nyc-ticker-stream {
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--nyc-blue);
+  color: var(--nyc-text-white);
+  border-bottom: var(--nyc-border-width) solid var(--nyc-border);
+  padding: 0.5rem 0;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.nyc-ticker-track {
+  display: flex;
+  width: max-content;
+  animation: ticker-slide 28s linear infinite;
+}
+
+.nyc-ticker-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes ticker-slide {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.nyc-ticker-content {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+.ticker-pill {
+  background-color: var(--nyc-yellow);
+  color: var(--nyc-text-main);
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--nyc-radius-sm);
+  border: 1px solid var(--nyc-border);
+}
+
+/* ==================================================
+   MAIN CONTENT & HERO (NYC / SHERYIANS STYLE)
+   ================================================== */
+.nyc-main-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem;
+}
+
+.nyc-view {
+  display: none;
+  flex-direction: column;
+}
+
+.nyc-view.active {
+  display: flex;
+}
+
+/* Hero Section */
+.nyc-hero-section {
+  text-align: center;
+  padding: 3rem 1.5rem 2rem;
+  background: var(--nyc-surface);
+  border: var(--nyc-border-width) solid var(--nyc-border);
+  border-radius: var(--nyc-radius-xl);
+  box-shadow: var(--shadow-offset);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-sticker-row {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.nyc-hero-headline {
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  line-height: 1.05;
+  color: var(--nyc-text-main);
+  text-transform: uppercase;
+}
+
+.nyc-highlight-text {
+  color: var(--nyc-blue);
+  background: linear-gradient(180deg, transparent 65%, var(--nyc-yellow) 65%);
+  padding: 0 0.4rem;
+}
+
+.nyc-hero-sub {
+  font-size: 1.15rem;
+  color: var(--nyc-text-secondary);
+  max-width: 760px;
+  margin: 1.25rem auto 0;
+  line-height: 1.6;
+}
+
+.nyc-hero-cta-group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.25rem;
+  margin-top: 2rem;
+}
+
+/* Hero Proof Stats Grid */
+.nyc-hero-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  border-top: var(--nyc-border-width) solid var(--nyc-border);
+  padding-top: 1.5rem;
+}
+
+.hero-stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-num {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  color: var(--nyc-blue);
+}
+
+.stat-lbl {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  color: var(--nyc-text-muted);
+}
+
+/* ==================================================
+   TRADITIONAL COLLEGE VS CAMPUSHUB MATRIX
+   ================================================== */
+.matrix-header .matrix-title {
+  font-size: 2.2rem;
+  margin-top: 0.5rem;
+}
+
+.matrix-header .matrix-sub {
+  font-size: 0.95rem;
+  color: var(--nyc-text-secondary);
+}
+
+.matrix-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.matrix-col {
+  padding: 2rem;
+  border-radius: var(--nyc-radius-lg);
+  border: var(--nyc-border-width) solid var(--nyc-border);
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.matrix-col.old-way {
+  background-color: var(--nyc-surface-subtle);
+  opacity: 0.85;
+}
+
+.matrix-col.new-way {
+  background-color: var(--nyc-blue-light);
+  border-color: var(--nyc-border);
+}
+
+.col-badge {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--nyc-radius-sm);
+  border: 1.5px solid var(--nyc-border);
+  width: max-content;
+}
+
+.bad-badge {
+  background-color: #fee2e2;
+  color: #b91c1c;
+}
+
+.good-badge {
+  background-color: var(--nyc-yellow);
+  color: var(--nyc-text-main);
+  box-shadow: 2px 2px 0px var(--nyc-border);
+}
+
+.matrix-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  font-size: 0.925rem;
+  color: var(--nyc-text-secondary);
+}
+
+.matrix-list li {
+  position: relative;
+  padding-left: 1.5rem;
+}
+
+.old-way .matrix-list li::before {
+  content: "✕";
+  position: absolute;
+  left: 0;
+  color: #ef4444;
+  font-weight: bold;
+}
+
+.new-way .matrix-list li::before {
+  content: "⚡";
+  position: absolute;
+  left: 0;
+}
+
+/* ==================================================
+   QUICK TILES GRID
+   ================================================== */
+.nyc-section-header .section-kicker {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  color: var(--nyc-blue);
+  letter-spacing: 0.08em;
+}
+
+.nyc-section-header .section-main-title {
+  font-size: 1.8rem;
+}
+
+.quick-tiles-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+}
+
+.nyc-tile {
+  background-color: var(--nyc-surface);
+  border: var(--nyc-border-width) solid var(--nyc-border);
+  border-radius: var(--nyc-radius-lg);
+  box-shadow: var(--shadow-offset);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.nyc-tile:hover {
+  transform: translate(2px, 2px);
+  box-shadow: var(--shadow-offset-hover);
+  background-color: var(--nyc-blue-light);
+}
+
+.tile-icon {
+  font-size: 2rem;
+}
+
+.tile-title {
+  font-size: 1.25rem;
+}
+
+.tile-desc {
+  font-size: 0.825rem;
+  color: var(--nyc-text-secondary);
+  line-height: 1.5;
+  flex-grow: 1;
+}
+
+.tile-action {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  color: var(--nyc-blue);
+  margin-top: 0.5rem;
+}
+
+/* ==================================================
+   DASHBOARD 2-COLUMN GRID (MATCHES & TEAMS)
+   ================================================== */
+.nyc-dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.dash-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.col-head-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.col-title {
+  font-size: 1.4rem;
+}
+
+.smart-matches-list, .active-teams-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Smart Match Cards */
+.smart-match-card {
+  background-color: var(--nyc-surface);
+  border: var(--nyc-border-width) solid var(--nyc-border);
+  border-radius: var(--nyc-radius-lg);
+  box-shadow: var(--shadow-offset);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.sm-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sm-user-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.sm-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1.5px solid var(--nyc-border);
+}
+
+.sm-name {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+}
+
+.sm-dept {
+  font-size: 0.75rem;
+  color: var(--nyc-text-muted);
+}
+
+.match-score-badge {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  background-color: var(--nyc-yellow);
+  color: var(--nyc-text-main);
+  border: 1.5px solid var(--nyc-border);
+  border-radius: var(--nyc-radius-full);
+  padding: 0.2rem 0.65rem;
+  box-shadow: 2px 2px 0px var(--nyc-border);
+}
+
+.sm-match-reason {
+  font-size: 0.825rem;
+  color: var(--nyc-text-secondary);
+  background-color: var(--nyc-blue-light);
+  border: 1px solid var(--nyc-blue-border);
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--nyc-radius-sm);
+  border-left: 3px solid var(--nyc-blue);
+}
+
+.sm-skills-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.skill-chip {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  background-color: var(--nyc-surface-subtle);
+  border: 1px solid var(--nyc-border-subtle);
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--nyc-radius-sm);
+}
+
+/* ==================================================
+   ROADMAPS SECTION (NYC SIGNATURE FEATURE)
+   ================================================== */
+.roadmaps-hero {
+  background-color: var(--nyc-surface);
+  border: var(--nyc-border-width) solid var(--nyc-border);
+  border-radius: var(--nyc-radius-xl);
+  padding: 2.25rem;
+}
+
+.roadmap-track-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.track-tab {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  padding: 0.6rem 1.25rem;
+  border: var(--nyc-border-width) solid var(--nyc-border);
+  border-radius: var(--nyc-radius-md);
+  background-color: var(--nyc-surface);
+  box-shadow: 2px 2px 0px var(--nyc-border);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.track-tab:hover {
+  background-color: var(--nyc-blue-light);
+}
+
+.track-tab.active {
+  background-color: var(--nyc-blue);
+  color: var(--nyc-text-white);
+  box-shadow: var(--shadow-offset);
+}
+
+/* Timeline Milestones */
+.roadmap-timeline-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.roadmap-milestone-card {
+  background-color: var(--nyc-surface);
+  border: var(--nyc-border-width) solid var(--nyc-border);
+  border-radius: var(--nyc-radius-lg);
+  box-shadow: var(--shadow-offset);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.ms-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ms-phase-tag {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  background-color: var(--nyc-yellow);
+  padding: 0.15rem 0.5rem;
+  border: 1px solid var(--nyc-border);
+  border-radius: var(--nyc-radius-sm);
+}
+
+.ms-title {
+  font-size: 1.35rem;
+}
+
+.ms-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+}
+
+.ms-check-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ms-project-box {
+  background-color: var(--nyc-blue-light);
+  border: 1.5px solid var(--nyc-blue-border);
+  border-radius: var(--nyc-radius-md);
+  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ==================================================
+   TEAM FINDER HERO & CARDS
+   ================================================== */
+.tf-hero-card {
+  background-color: var(--nyc-surface);
+  border: var(--nyc-border-width) solid var(--nyc-border);
+  border-radius: var(--nyc-radius-xl);
+  padding: 2.25rem;
+}
+
+.nyc-smart-search-box {
+  display: flex;
+  align-items: center;
+  background-color: var(--nyc-surface);
+  border: var(--nyc-border-width) solid var(--nyc-border);
+  border-radius: var(--nyc-radius-md);
+  box-shadow: var(--shadow-offset);
+  padding: 0.4rem 0.5rem 0.4rem 1.25rem;
+  gap: 0.75rem;
+}
+
+.nyc-search-input {
+  flex-grow: 1;
+  border: none;
+  outline: none;
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  color: var(--nyc-text-main);
+}
+
+.nyc-role-filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.filter-lbl {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  color: var(--nyc-text-muted);
+}
+
+.role-chip {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  background-color: var(--nyc-surface);
+  border: 1.5px solid var(--nyc-border);
+  border-radius: var(--nyc-radius-sm);
+  padding: 0.3rem 0.75rem;
+  box-shadow: 2px 2px 0px var(--nyc-border);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.role-chip:hover {
+  background-color: var(--nyc-blue-light);
+}
+
+.role-chip.active {
+  background-color: var(--nyc-blue);
+  color: var(--nyc-text-white);
+  box-shadow: 2px 2px 0px var(--nyc-border);
+}
+
+.teams-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.team-card {
+  background-color: var(--nyc-surface);
+  border: var(--nyc-border-width) solid var(--nyc-border);
+  border-radius: var(--nyc-radius-lg);
+  box-shadow: var(--shadow-offset);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  transition: all var(--transition-fast);
+}
+
+.team-card:hover {
+  transform: translate(2px, 2px);
+  box-shadow: var(--shadow-offset-hover);
+}
+
+.team-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.team-event-badge {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  color: var(--nyc-blue);
+}
+
+.team-title {
+  font-size: 1.45rem;
+}
+
+.team-status-pill {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  background-color: var(--nyc-yellow);
+  border: 1px solid var(--nyc-border);
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--nyc-radius-sm);
+}
+
+.team-desc {
+  font-size: 0.9rem;
+  color: var(--nyc-text-secondary);
+  line-height: 1.5;
+  flex-grow: 1;
+}
+
+.team-roles-needed {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.roles-label {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  color: var(--nyc-text-muted);
+}
+
+.roles-tags-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.role-needed-tag {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  background-color: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid var(--nyc-border);
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--nyc-radius-sm);
+}
+
+.team-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 1rem;
+  border-top: 1.5px dashed var(--nyc-border-subtle);
+}
+
+.team-members-avatars {
+  display: flex;
+  align-items: center;
+}
+
+.t-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1.5px solid var(--nyc-border);
+  margin-left: -8px;
+  object-fit: cover;
+}
+
+.t-avatar:first-child {
+  margin-left: 0;
+}
+
+.t-member-count {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  color: var(--nyc-text-muted);
+  margin-left: 0.5rem;
+}
+
+/* ==================================================
+   COMMUNITIES & DISCUSSIONS & MARKETPLACE
+   ================================================== */
+.communities-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+
+.community-card {
+  background-color: var(--nyc-surface);
+  border: var(--nyc-border-width) solid var(--nyc-border);
+  border-radius: var(--nyc-radius-lg);
+  box-shadow: var(--shadow-offset);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.community-card:hover {
+  transform: translate(2px, 2px);
+  box-shadow: var(--shadow-offset-hover);
+}
+
+.comm-icon-large {
+  font-size: 2.5rem;
+}
+
+.comm-name {
+  font-size: 1.35rem;
+}
+
+.comm-desc {
+  font-size: 0.85rem;
+  color: var(--nyc-text-secondary);
+  line-height: 1.5;
+  flex-grow: 1;
+}
+
+.comm-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  color: var(--nyc-text-muted);
+}
+
+/* Discussion Feed */
+.quick-create-post-card {
+  background-color: var(--nyc-surface);
+  border-radius: var(--nyc-radius-lg);
+  padding: 1.25rem;
+}
+
+.qc-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.qc-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1.5px solid var(--nyc-border);
+}
+
+.qc-input {
+  flex-grow: 1;
+  border: 1.5px solid var(--nyc-border);
+  border-radius: var(--nyc-radius-md);
+  padding: 0.65rem 1rem;
+  font-size: 0.9rem;
+  outline: none;
+  cursor: pointer;
+}
+
+.qc-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.qc-action-btn {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  background: var(--nyc-surface-subtle);
+  border: 1px solid var(--nyc-border-subtle);
+  padding: 0.35rem 0.65rem;
+  border-radius: var(--nyc-radius-sm);
+  cursor: pointer;
+}
+
+.discussions-feed-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.post-card {
+  background-color: var(--nyc-surface);
+  border: var(--nyc-border-width) solid var(--nyc-border);
+  border-radius: var(--nyc-radius-lg);
+  box-shadow: var(--shadow-offset);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.post-author-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.author-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.author-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1.5px solid var(--nyc-border);
+}
+
+.author-name {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+}
+
+.author-meta {
+  font-size: 0.75rem;
+  color: var(--nyc-text-muted);
+}
+
+.post-cat-badge {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  background-color: var(--nyc-blue-light);
+  color: var(--nyc-blue);
+  border: 1px solid var(--nyc-blue-border);
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--nyc-radius-sm);
+}
+
+.post-content-text {
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.post-actions-bar {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding-top: 0.75rem;
+  border-top: 1px dashed var(--nyc-border-subtle);
+}
+
+.post-act-btn {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.post-act-btn.liked {
+  color: var(--nyc-red);
+}
+
+/* Marketplace Products */
+.marketplace-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+}
+
+.product-card {
+  background-color: var(--nyc-surface);
+  border: var(--nyc-border-width) solid var(--nyc-border);
+  border-radius: var(--nyc-radius-lg);
+  box-shadow: var(--shadow-offset);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.product-img-wrap {
+  width: 100%;
+  height: 150px;
+  position: relative;
+}
+
+.product-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.product-condition-tag {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  background-color: var(--nyc-yellow);
+  border: 1px solid var(--nyc-border);
+  padding: 0.1rem 0.45rem;
+  border-radius: var(--nyc-radius-sm);
+}
+
+.product-body {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  flex-grow: 1;
+}
+
+.product-price {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+  color: var(--nyc-blue);
+}
+
+.product-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.product-seller-row {
+  font-size: 0.75rem;
+  color: var(--nyc-text-muted);
+}
+
+.product-actions-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--nyc-border-subtle);
+}
+
+/* Events Grid */
+.events-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+
+.event-card {
+  background-color: var(--nyc-surface);
+  border: var(--nyc-border-width) solid var(--nyc-border);
+  border-radius: var(--nyc-radius-lg);
+  box-shadow: var(--shadow-offset);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.event-hero-img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+.event-card-body {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  flex-grow: 1;
+}
+
+.event-date-badge {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  color: var(--nyc-blue);
+}
+
+.event-title {
+  font-size: 1.35rem;
+}
+
+.event-desc {
+  font-size: 0.85rem;
+  color: var(--nyc-text-secondary);
+  line-height: 1.5;
+  flex-grow: 1;
+}
+
+.event-meta-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.8rem;
+  color: var(--nyc-text-muted);
+}
+
+.event-card-footer {
+  padding: 1rem 1.25rem;
+  background-color: var(--nyc-surface-subtle);
+  border-top: 1.5px solid var(--nyc-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* ==================================================
+   PROFILE PAGE (NYC THEMED)
+   ================================================== */
+.profile-hero-card {
+  background-color: var(--nyc-surface);
+  border-radius: var(--nyc-radius-xl);
+  overflow: hidden;
+}
+
+.nyc-banner-gradient {
+  height: 140px;
+  background: linear-gradient(135deg, var(--nyc-blue), #0026b3 60%, var(--nyc-yellow));
+}
+
+.profile-hero-body {
+  padding: 0 2rem 2rem;
+}
+
+.profile-avatar-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-top: -50px;
+  margin-bottom: 1rem;
+}
+
+.profile-avatar-wrap {
+  position: relative;
+  width: 100px;
+  height: 100px;
+}
+
+.profile-avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--nyc-border);
+  box-shadow: 2px 2px 0px var(--nyc-border);
+}
+
+.profile-verified-badge {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: var(--nyc-yellow);
+  color: var(--nyc-text-main);
+  border: 1.5px solid var(--nyc-border);
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+}
+
+.profile-full-name {
+  font-size: 2.2rem;
+}
+
+.verified-student-tag {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  background-color: var(--nyc-yellow);
+  border: 1px solid var(--nyc-border);
+  padding: 0.15rem 0.5rem;
+  border-radius: var(--nyc-radius-sm);
+  display: inline-block;
+  margin-left: 0.5rem;
+}
+
+.profile-college-line {
+  font-size: 0.95rem;
+  color: var(--nyc-text-secondary);
+}
+
+.profile-bio-text {
+  font-size: 0.95rem;
+  color: var(--nyc-text-secondary);
+  line-height: 1.6;
+  max-width: 800px;
+  margin-top: 0.75rem;
+}
+
+.profile-stats-strip {
+  display: flex;
+  gap: 2rem;
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1.5px dashed var(--nyc-border-subtle);
+}
+
+.p-stat-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.p-stat-val {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  color: var(--nyc-blue);
+}
+
+.p-stat-lbl {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  color: var(--nyc-text-muted);
+}
+
+.profile-content-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 1.5rem;
+}
+
+.p-card {
+  background-color: var(--nyc-surface);
+  border-radius: var(--nyc-radius-lg);
+  padding: 1.5rem;
+}
+
+.p-card-title {
+  font-size: 1.3rem;
+}
+
+/* ==================================================
+   SLIDE-OVER CHAT DRAWER
+   ================================================== */
+.chat-drawer-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000;
+  display: flex;
+  justify-content: flex-end;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--transition-fast), visibility var(--transition-fast);
+}
+
+.chat-drawer-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.chat-drawer-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(10, 15, 41, 0.5);
+}
+
+.chat-drawer-window {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 680px;
+  height: 100%;
+  background-color: var(--nyc-surface);
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform var(--transition-fast);
+}
+
+.chat-drawer-overlay.active .chat-drawer-window {
+  transform: translateX(0);
+}
+
+.chat-drawer-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: var(--nyc-border-width) solid var(--nyc-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.drawer-title {
+  font-family: var(--font-display);
+  font-size: 1.35rem;
+}
+
+.drawer-sub {
+  font-size: 0.8rem;
+  color: var(--nyc-text-muted);
+}
+
+.close-drawer-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.4rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.chat-drawer-body {
+  display: flex;
+  flex-grow: 1;
+  overflow: hidden;
+}
+
+.conversations-sidebar {
+  width: 220px;
+  border-right: var(--nyc-border-width) solid var(--nyc-border-subtle);
+  overflow-y: auto;
+}
+
+.convo-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1rem;
+  cursor: pointer;
+  border-bottom: 1px solid var(--nyc-border-subtle);
+}
+
+.convo-item:hover, .convo-item.active {
+  background-color: var(--nyc-blue-light);
+}
+
+.convo-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--nyc-border);
+  object-fit: cover;
+}
+
+.convo-name {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+}
+
+.convo-snippet {
+  font-size: 0.75rem;
+  color: var(--nyc-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 120px;
+}
+
+.active-chat-container {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--nyc-bg);
+}
+
+.active-chat-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1.25rem;
+  background-color: var(--nyc-surface);
+  border-bottom: 1px solid var(--nyc-border-subtle);
+}
+
+.peer-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--nyc-border);
+  object-fit: cover;
+}
+
+.peer-name {
+  font-family: var(--font-display);
+  font-size: 1rem;
+}
+
+.peer-status {
+  font-size: 0.75rem;
+  color: var(--nyc-blue);
+  font-weight: 600;
+}
+
+.chat-messages-area {
+  flex-grow: 1;
+  padding: 1.25rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.msg-bubble {
+  max-width: 75%;
+  padding: 0.65rem 1rem;
+  border-radius: var(--nyc-radius-md);
+  font-size: 0.9rem;
+  border: 1.5px solid var(--nyc-border);
+}
+
+.msg-bubble.peer {
+  align-self: flex-start;
+  background-color: var(--nyc-surface);
+  box-shadow: 2px 2px 0px var(--nyc-border);
+}
+
+.msg-bubble.me {
+  align-self: flex-end;
+  background-color: var(--nyc-yellow);
+  color: var(--nyc-text-main);
+  box-shadow: 2px 2px 0px var(--nyc-border);
+}
+
+.chat-input-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 1.25rem;
+  background-color: var(--nyc-surface);
+  border-top: var(--nyc-border-width) solid var(--nyc-border);
+}
+
+.chat-input-field {
+  flex-grow: 1;
+  border: 1.5px solid var(--nyc-border);
+  border-radius: var(--nyc-radius-md);
+  padding: 0.55rem 1rem;
+  font-size: 0.9rem;
+  outline: none;
+}
+
+/* ==================================================
+   NOTIFICATIONS POPOVER
+   ================================================== */
+.nyc-notif-wrap {
+  position: relative;
+}
+
+.nyc-notif-popover {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 360px;
+  background-color: var(--nyc-surface);
+  border: var(--nyc-border-width) solid var(--nyc-border);
+  border-radius: var(--nyc-radius-lg);
+  box-shadow: var(--shadow-offset);
+  display: none;
+  z-index: 150;
+}
+
+.nyc-notif-popover.active {
+  display: block;
+}
+
+.notif-pop-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--nyc-border-subtle);
+  font-family: var(--font-display);
+  font-size: 1rem;
+}
+
+.mark-read-btn {
+  background: transparent;
+  border: none;
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  color: var(--nyc-blue);
+  cursor: pointer;
+}
+
+.notif-pop-list {
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.notif-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  border-bottom: 1px solid var(--nyc-border-subtle);
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.notif-item.unread {
+  background-color: var(--nyc-blue-light);
+}
+
+.notif-time {
+  font-size: 0.725rem;
+  color: var(--nyc-text-muted);
+  margin-top: 0.2rem;
+}
+
+/* ==================================================
+   MODALS (NYC / NEO-BRUTALIST STYLE)
+   ================================================== */
+.app-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(10, 15, 41, 0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 1500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--transition-fast), visibility var(--transition-fast);
+}
+
+.app-modal.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.modal-card {
+  position: relative;
+  z-index: 10;
+  background-color: var(--nyc-surface);
+  border-radius: var(--nyc-radius-xl);
+  width: 100%;
+  max-width: 580px;
+  max-height: 90vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+}
+
+.modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.modal-kicker {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  color: var(--nyc-blue);
+  letter-spacing: 0.06em;
+}
+
+.modal-title {
+  font-size: 1.6rem;
+}
+
+.modal-close {
+  background: transparent;
+  border: none;
+  font-size: 1.4rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px dashed var(--nyc-border-subtle);
+}
+
+/* Forms */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.form-label {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  letter-spacing: 0.04em;
+}
+
+.form-input, .form-select, .form-textarea {
+  width: 100%;
+  font-family: var(--font-sans);
+  font-size: 0.925rem;
+  padding: 0.65rem 0.9rem;
+  border: 1.5px solid var(--nyc-border);
+  border-radius: var(--nyc-radius-md);
+  background-color: var(--nyc-surface);
+  outline: none;
+}
+
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: var(--nyc-blue);
+  box-shadow: 0 0 0 3px var(--nyc-blue-light);
+}
+
+.form-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.form-row-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+}
+
+.link-text {
+  color: var(--nyc-blue);
+  text-decoration: none;
+}
+
+/* Post Identity Toggle */
+.post-identity-toggle {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.toggle-pill {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.6rem;
+  border: 1.5px solid var(--nyc-border);
+  border-radius: var(--nyc-radius-md);
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.toggle-pill.active {
+  background-color: var(--nyc-yellow);
+  box-shadow: 2px 2px 0px var(--nyc-border);
+}
+
+/* Create Option Cards */
+.create-menu-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.create-option-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem;
+  border: var(--nyc-border-width) solid var(--nyc-border);
+  border-radius: var(--nyc-radius-lg);
+  box-shadow: 2px 2px 0px var(--nyc-border);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.create-option-card:hover {
+  transform: translate(2px, 2px);
+  background-color: var(--nyc-blue-light);
+}
+
+.c-opt-icon { font-size: 2rem; }
+.c-opt-title { font-family: var(--font-display); font-size: 1.2rem; }
+.c-opt-desc { font-size: 0.8rem; color: var(--nyc-text-muted); }
+
+/* ==================================================
+   ONBOARDING FLOW MODAL (NYC / SHERYIANS STYLE)
+   ================================================== */
+.onboarding-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(10, 15, 41, 0.75);
+  backdrop-filter: blur(6px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--transition-fast), visibility var(--transition-fast);
+}
+
+.onboarding-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.onboarding-card {
+  background-color: var(--nyc-surface);
+  border-radius: var(--nyc-radius-xl);
+  width: 100%;
+  max-width: 480px;
+  position: relative;
+  overflow: hidden;
+  padding: 2.5rem 2rem;
+}
+
+.onboarding-progress-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background-color: var(--nyc-surface-subtle);
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--nyc-blue), var(--nyc-yellow));
+}
+
+.skip-onboarding-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: transparent;
+  border: none;
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  color: var(--nyc-text-muted);
+  cursor: pointer;
+}
+
+.onboarding-step {
+  display: none;
+  flex-direction: column;
+}
+
+.onboarding-step.active {
+  display: flex;
+}
+
+.splash-logo-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.app-logo-badge {
+  width: 68px;
+  height: 68px;
+  border-radius: var(--nyc-radius-lg);
+  background: var(--nyc-blue);
+  border: var(--nyc-border-width) solid var(--nyc-border);
+  box-shadow: var(--shadow-offset);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-emoji {
+  font-size: 2.2rem;
+}
+
+.splash-title {
+  font-size: 3rem;
+  color: var(--nyc-blue);
+  line-height: 1;
+}
+
+.splash-tagline {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  margin-top: 0.25rem;
+}
+
+.splash-desc {
+  font-size: 0.95rem;
+  color: var(--nyc-text-secondary);
+  line-height: 1.5;
+  margin-top: 0.75rem;
+}
+
+/* Collab Circle Illustration */
+.welcome-illustration {
+  display: flex;
+  justify-content: center;
+}
+
+.collab-illus-circle {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background-color: var(--nyc-yellow);
+  border: var(--nyc-border-width) solid var(--nyc-border);
+  box-shadow: var(--shadow-offset);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.illus-emoji {
+  font-size: 2.5rem;
+}
+
+.illus-badge {
+  position: absolute;
+  background-color: var(--nyc-surface);
+  border: 1.5px solid var(--nyc-border);
+  border-radius: var(--nyc-radius-full);
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  padding: 0.2rem 0.5rem;
+  box-shadow: 2px 2px 0px var(--nyc-border);
+  white-space: nowrap;
+}
+
+.illus-badge.badge-1 { top: -10px; right: -25px; }
+.illus-badge.badge-2 { bottom: -8px; left: -20px; }
+.illus-badge.badge-3 { top: 35px; left: -35px; }
+
+.step-heading {
+  font-size: 1.85rem;
+}
+
+.step-subheading {
+  font-size: 0.925rem;
+  color: var(--nyc-text-secondary);
+  margin-top: 0.25rem;
+}
+
+/* OTP Boxes */
+.otp-boxes-grid {
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
+}
+
+.otp-box {
+  width: 46px;
+  height: 52px;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  color: var(--nyc-blue);
+  border: var(--nyc-border-width) solid var(--nyc-border);
+  border-radius: var(--nyc-radius-md);
+  box-shadow: 2px 2px 0px var(--nyc-border);
+  outline: none;
+}
+
+.otp-box:focus {
+  background-color: var(--nyc-yellow);
+}
+
+.timer-badge {
+  font-family: var(--font-display);
+  color: var(--nyc-blue);
+  font-size: 1rem;
+}
+
+/* College Item in Onboarding */
+.popular-colleges-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.college-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0.85rem;
+  border: 1.5px solid var(--nyc-border-subtle);
+  border-radius: var(--nyc-radius-md);
+  cursor: pointer;
+}
+
+.college-item.selected {
+  border-color: var(--nyc-border);
+  background-color: var(--nyc-yellow);
+  box-shadow: 2px 2px 0px var(--nyc-border);
+}
+
+.college-info { flex-grow: 1; }
+.college-name { font-family: var(--font-display); font-size: 1rem; }
+.college-meta { font-size: 0.75rem; color: var(--nyc-text-muted); }
+.check-mark { display: none; font-weight: bold; }
+.college-item.selected .check-mark { display: block; }
+
+/* Multi-select Chips in Onboarding */
+.chips-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.interest-chip {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  padding: 0.4rem 0.85rem;
+  border: 1.5px solid var(--nyc-border);
+  border-radius: var(--nyc-radius-md);
+  background-color: var(--nyc-surface);
+  box-shadow: 2px 2px 0px var(--nyc-border);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.interest-chip.active {
+  background-color: var(--nyc-yellow);
+  transform: translate(1px, 1px);
+}
+
+/* ==================================================
+   TOAST
+   ================================================== */
+.app-toast {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background-color: var(--nyc-text-main);
+  color: var(--nyc-text-white);
+  padding: 0.85rem 1.4rem;
+  border-radius: var(--nyc-radius-lg);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  letter-spacing: 0.04em;
+  z-index: 3000;
+  transform: translateY(100px);
+  opacity: 0;
+  transition: all 250ms ease;
+  pointer-events: none;
+}
+
+.app-toast.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* ==================================================
+   RESPONSIVE LAYOUT
+   ================================================== */
+@media (max-width: 1024px) {
+  .quick-tiles-grid, .nyc-hero-stats-grid, .marketplace-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .matrix-grid, .nyc-dashboard-grid, .teams-cards-grid, .communities-grid, .events-grid, .profile-content-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .nyc-nav-links {
+    display: none;
+  }
+  .quick-tiles-grid, .nyc-hero-stats-grid, .marketplace-grid {
+    grid-template-columns: 1fr;
+  }
+  .nyc-hero-headline {
+    font-size: 2.2rem;
+  }
+}
