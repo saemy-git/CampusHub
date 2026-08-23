@@ -18,7 +18,6 @@
   "author": "Campus Hub Consortium",
   "license": "MIT",
   "devDependencies": {
-    "serve": "^14.2.4",
-    "vite": "^8.2.2"
+    "serve": "^14.2.4"
   }
 }
