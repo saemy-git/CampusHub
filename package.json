@@ -18,5 +18,8 @@
     "full-stack"
   ],
   "author": "CampusHub Team",
-  "license": "MIT"
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.5.0"
+  }
 }
