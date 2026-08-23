@@ -78,22 +78,22 @@
           <h2 class="step-heading">Student Login</h2>
           <p class="step-subheading">Access your campus build network.</p>
           
-          <form class="onboarding-form mt-4" onsubmit="event.preventDefault(); goToOnboardingStep(6);">
+          <form class="onboarding-form mt-4" id="login-form" onsubmit="handleLoginSubmit(event)">
             <div class="form-group">
               <label class="form-label">College Email</label>
-              <input type="email" class="form-input" id="login-email" value="arjun.sharma@cgc.edu.in" placeholder="name@college.edu.in" required>
+              <input type="email" class="form-input" id="login-email" placeholder="e.g. yourname@college.edu.in" required>
             </div>
             <div class="form-group">
               <label class="form-label">Password</label>
-              <input type="password" class="form-input" value="••••••••••••" placeholder="Enter password" required>
+              <input type="password" class="form-input" id="login-password" placeholder="Enter password" required>
             </div>
             <div class="form-row-between">
               <label class="checkbox-label">
-                <input type="checkbox" checked> Keep me logged in
+                <input type="checkbox" id="login-remember" checked> Keep me logged in
               </label>
-              <a href="javascript:void(0)" class="link-text text-sm">Forgot?</a>
+              <a href="javascript:void(0)" class="link-text text-sm" onclick="showToast('⚡ Password reset link dispatched to registered email.')">Forgot?</a>
             </div>
-            <button type="submit" class="btn btn-nyc-primary w-full mt-4">Log In to Build</button>
+            <button type="submit" class="btn btn-nyc-primary w-full mt-4">Log In to Build →</button>
             <div class="text-center mt-3">
               <span class="text-muted text-sm">New student builder? </span>
               <a href="javascript:void(0)" class="link-text font-bold text-sm" onclick="goToOnboardingStep(4)">Sign Up →</a>
@@ -109,11 +109,11 @@
           <h2 class="step-heading">Verify College Email</h2>
           <p class="step-subheading">Only verified students can access team matching and internal campus repos.</p>
           
-          <form class="onboarding-form mt-4" onsubmit="event.preventDefault(); goToOnboardingStep(5);">
+          <form class="onboarding-form mt-4" id="verify-email-form" onsubmit="handleVerifyEmailSubmit(event)">
             <div class="form-group">
               <label class="form-label">Official College Email Address</label>
-              <input type="email" class="form-input" id="verify-email-input" value="arjun.sharma@cgc.edu.in" placeholder="arjun.sharma@cgc.edu.in" required>
-              <span class="input-hint">Valid college domains (.edu, .ac.in)</span>
+              <input type="email" class="form-input" id="verify-email-input" placeholder="e.g. yourname@college.edu.in" required>
+              <span class="input-hint">Valid college domains (.edu, .ac.in, .in, etc.)</span>
             </div>
             <button type="submit" class="btn btn-nyc-primary w-full mt-3">Send Verification OTP →</button>
             <div class="text-center mt-3">
@@ -128,28 +128,30 @@
         <div class="otp-content text-center">
           <div class="sticker-tag rotate-left mb-2">⚡ 6-DIGIT SECURITY KEY</div>
           <h2 class="step-heading">Enter Verification Code</h2>
-          <p class="step-subheading">Sent to <b id="otp-email-display">arjun.sharma@cgc.edu.in</b></p>
+          <p class="step-subheading">Sent to <b id="otp-email-display">your email</b></p>
           
-          <div class="otp-boxes-grid mt-4">
-            <input type="text" maxlength="1" class="otp-box" value="8" autofocus>
-            <input type="text" maxlength="1" class="otp-box" value="4">
-            <input type="text" maxlength="1" class="otp-box" value="9">
-            <input type="text" maxlength="1" class="otp-box" value="2">
-            <input type="text" maxlength="1" class="otp-box" value="0">
-            <input type="text" maxlength="1" class="otp-box" value="5">
-          </div>
+          <form class="onboarding-form" onsubmit="handleOtpSubmit(event)">
+            <div class="otp-boxes-grid mt-4">
+              <input type="text" maxlength="1" class="otp-box" value="8" autofocus>
+              <input type="text" maxlength="1" class="otp-box" value="4">
+              <input type="text" maxlength="1" class="otp-box" value="9">
+              <input type="text" maxlength="1" class="otp-box" value="2">
+              <input type="text" maxlength="1" class="otp-box" value="0">
+              <input type="text" maxlength="1" class="otp-box" value="5">
+            </div>
 
-          <div class="resend-row mt-4">
-            <span class="text-muted text-sm">Resend in </span>
-            <span class="timer-badge" id="otp-timer">00:48</span>
-          </div>
+            <div class="resend-row mt-4">
+              <span class="text-muted text-sm">Resend in </span>
+              <span class="timer-badge" id="otp-timer">00:48</span>
+            </div>
 
-          <button class="btn btn-nyc-primary w-full mt-4" onclick="goToOnboardingStep(6)">
-            Verify & Continue →
-          </button>
-          <div class="text-center mt-3">
-            <a href="javascript:void(0)" class="text-muted text-sm" onclick="goToOnboardingStep(4)">Change Email</a>
-          </div>
+            <button type="submit" class="btn btn-nyc-primary w-full mt-4">
+              Verify & Continue →
+            </button>
+            <div class="text-center mt-3">
+              <a href="javascript:void(0)" class="text-muted text-sm" onclick="goToOnboardingStep(4)">Change Email</a>
+            </div>
+          </form>
         </div>
       </div>
 
@@ -161,7 +163,7 @@
           <p class="step-subheading">Join your campus house to unlock local hackathons and roadmaps.</p>
           
           <div class="search-input-wrap mt-3">
-            <input type="text" id="college-search-input" class="search-field" placeholder="Search college (e.g. CGC Landran, LPU)...">
+            <input type="text" id="college-search-input" class="search-field" placeholder="Search or type college name (e.g. CGC Landran, LPU)..." oninput="filterCollegeList(this.value)">
           </div>
 
           <div class="popular-colleges-list mt-3" id="popular-colleges-list">
@@ -224,20 +226,20 @@
           <h2 class="step-heading">Tell Us About Yourself</h2>
           <p class="step-subheading">Help teammates discover your skillset.</p>
           
-          <form class="onboarding-form mt-4" onsubmit="event.preventDefault(); goToOnboardingStep(8);">
+          <form class="onboarding-form mt-4" id="ob-profile-form" onsubmit="handleDeptAndNameSubmit(event)">
             <div class="form-group">
               <label class="form-label">Full Name</label>
-              <input type="text" class="form-input" id="ob-student-name" value="Arjun Sharma" required>
+              <input type="text" class="form-input" id="ob-student-name" placeholder="Enter your full name" required>
             </div>
 
             <div class="form-group">
               <label class="form-label">Department / Branch</label>
               <select class="form-select" id="ob-dept-select">
-                <option value="CSE" selected>Computer Science & Engineering (CSE)</option>
-                <option value="AI_DS">Artificial Intelligence & Data Science</option>
-                <option value="IT">Information Technology (IT)</option>
-                <option value="ECE">Electronics & Communication (ECE)</option>
-                <option value="ME">Mechanical Engineering</option>
+                <option value="Computer Science & Engineering" selected>Computer Science & Engineering (CSE)</option>
+                <option value="Artificial Intelligence & Data Science">Artificial Intelligence & Data Science (AI/DS)</option>
+                <option value="Information Technology">Information Technology (IT)</option>
+                <option value="Electronics & Communication">Electronics & Communication (ECE)</option>
+                <option value="Mechanical Engineering">Mechanical Engineering</option>
               </select>
             </div>
 
@@ -357,9 +359,9 @@
           </button>
 
           <!-- Profile Trigger -->
-          <div class="nyc-nav-profile" onclick="switchView('profile')">
-            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="Arjun" class="nyc-avatar">
-            <span class="nyc-user-tag">ARJUN</span>
+          <div class="nyc-nav-profile" onclick="switchView('profile')" title="My Profile & Account">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="User Avatar" class="nyc-avatar" id="nav-user-avatar">
+            <span class="nyc-user-tag" id="nav-user-name">BUILDER</span>
           </div>
 
         </div>
@@ -841,18 +843,19 @@
               </div>
               <div class="profile-hero-actions">
                 <button class="btn btn-nyc-outline btn-sm" onclick="openEditProfileModal()">✏️ Edit Profile</button>
-                <button class="btn btn-nyc-primary btn-sm" onclick="showToast('Profile share link copied!')">Share Profile</button>
+                <button class="btn btn-nyc-outline btn-sm" onclick="logoutUser()" title="Log out or switch student account">🚪 Log Out</button>
+                <button class="btn btn-nyc-primary btn-sm" onclick="showToast('⚡ Profile share link copied to clipboard!')">Share Profile</button>
               </div>
             </div>
 
             <div class="profile-identity">
               <div class="profile-name-row">
                 <h1 class="profile-full-name" id="prof-name">Arjun Sharma</h1>
-                <span class="verified-student-tag">✓ Verified Student</span>
+                <span class="verified-student-tag" id="prof-verified-tag">✓ Verified Student</span>
               </div>
               <div class="profile-college-line" id="prof-college-line">CGC Landran • Computer Science Engineering • 3rd Year</div>
               <p class="profile-bio-text" id="prof-bio">
-                Passionate full-stack developer & ML enthusiast. Building scalable web apps and AI-driven tools. Always open for hackathon collaborations and startup capstone projects.
+                Passionate full-stack developer & ML enthusiast. Building scalable web apps and AI-driven tools.
               </p>
             </div>
 
@@ -862,7 +865,7 @@
                 <span class="p-stat-lbl">POSTS</span>
               </div>
               <div class="p-stat-item">
-                <span class="p-stat-val">2.4K</span>
+                <span class="p-stat-val" id="prof-xp-val">2.4K</span>
                 <span class="p-stat-lbl">BUILD XP</span>
               </div>
               <div class="p-stat-item">
@@ -881,22 +884,18 @@
           <div class="profile-left-col">
             <div class="p-card nyc-box-shadow">
               <h3 class="p-card-title">TECHNICAL SKILLS</h3>
-              <div class="chips-grid mt-3">
+              <div class="chips-grid mt-3" id="prof-skills-container">
                 <span class="skill-chip active">Python</span>
                 <span class="skill-chip active">React.js</span>
                 <span class="skill-chip active">Machine Learning</span>
-                <span class="skill-chip active">FastAPI</span>
-                <span class="skill-chip active">UI/UX Design</span>
-                <span class="skill-chip active">Tailwind CSS</span>
               </div>
             </div>
 
             <div class="p-card nyc-box-shadow mt-4">
-              <h3 class="p-card-title">LOOKING FOR</h3>
-              <div class="bullet-list mt-3">
-                <div class="bullet-item">🚀 <b>Hackathon teammates</b> for Smart India Hackathon 2026</div>
-                <div class="bullet-item">💡 <b>Startup co-founder</b> for AI campus product</div>
-                <div class="bullet-item">👥 <b>Project partner</b> for final year capstone</div>
+              <h3 class="p-card-title">INTERESTS & TRACKS</h3>
+              <div class="bullet-list mt-3" id="prof-looking-container">
+                <div class="bullet-item">🚀 <b>Hackathons & Competitions</b></div>
+                <div class="bullet-item">💻 <b>Full-Stack Development</b></div>
               </div>
             </div>
           </div>
@@ -1282,17 +1281,33 @@
       <form class="modal-body" onsubmit="handleProfileUpdateSubmit(event)">
         <div class="form-group">
           <label class="form-label">Full Name</label>
-          <input type="text" class="form-input" id="edit-prof-name" value="Arjun Sharma" required>
+          <input type="text" class="form-input" id="edit-prof-name" placeholder="Full name" required>
         </div>
 
         <div class="form-group">
           <label class="form-label">College</label>
-          <input type="text" class="form-input" id="edit-prof-college" value="CGC Landran" required>
+          <input type="text" class="form-input" id="edit-prof-college" placeholder="College name" required>
+        </div>
+
+        <div class="form-row" style="display: flex; gap: 12px;">
+          <div class="form-group" style="flex: 1;">
+            <label class="form-label">Department</label>
+            <input type="text" class="form-input" id="edit-prof-dept" placeholder="e.g. Computer Science">
+          </div>
+          <div class="form-group" style="flex: 1;">
+            <label class="form-label">Year of Study</label>
+            <input type="text" class="form-input" id="edit-prof-year" placeholder="e.g. 3rd Year">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Technical Skills (comma-separated)</label>
+          <input type="text" class="form-input" id="edit-prof-skills" placeholder="e.g. Python, React, PyTorch, Tailwind CSS">
         </div>
 
         <div class="form-group">
           <label class="form-label">Bio</label>
-          <textarea class="form-textarea" id="edit-prof-bio" rows="3">Passionate full-stack developer & ML enthusiast. Building scalable web apps and AI-driven tools.</textarea>
+          <textarea class="form-textarea" id="edit-prof-bio" rows="3" placeholder="Tell other builders about yourself"></textarea>
         </div>
 
         <div class="modal-footer px-0 pb-0">

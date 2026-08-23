@@ -3,20 +3,44 @@
  * High-octane, zero-dependency ES6 application logic.
  */
 
+const defaultUser = {
+  name: 'Arjun Sharma',
+  college: 'CGC Landran',
+  department: 'Computer Science Engineering',
+  year: '3rd Year',
+  email: 'arjun.sharma@cgc.edu.in',
+  isVerified: true,
+  bio: 'Passionate full-stack developer & ML enthusiast. Building scalable web apps and AI-driven tools. Always open for hackathon collaborations and startup capstone projects.',
+  skills: ['Python', 'React.js', 'Machine Learning', 'FastAPI', 'UI/UX Design', 'Tailwind CSS'],
+  interests: ['AI / ML', 'Programming', 'Hackathons', 'Startup', 'Design'],
+  avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80',
+  xp: 2450
+};
+
+function loadStoredUser() {
+  try {
+    const saved = localStorage.getItem('campushub_user');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      if (parsed && parsed.name) return parsed;
+    }
+  } catch (e) {
+    console.error('Error loading stored user:', e);
+  }
+  return defaultUser;
+}
+
 const store = {
-  currentUser: {
-    name: 'Arjun Sharma',
+  currentUser: loadStoredUser(),
+  tempRegistration: {
+    email: '',
+    name: '',
     college: 'CGC Landran',
     department: 'Computer Science Engineering',
     year: '3rd Year',
-    email: 'arjun.sharma@cgc.edu.in',
-    isVerified: true,
-    bio: 'Passionate full-stack developer & ML enthusiast. Building scalable web apps and AI-driven tools. Always open for hackathon collaborations and startup capstone projects.',
-    skills: ['Python', 'React.js', 'Machine Learning', 'UI/UX Design', 'FastAPI', 'Tailwind CSS'],
-    interests: ['AI / ML', 'Programming', 'Hackathons', 'Startup', 'Design'],
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80',
-    xp: 2450
+    interests: ['AI / ML', 'Fullstack', 'Hackathons']
   },
+  isLoggedIn: Boolean(localStorage.getItem('campushub_logged_in')),
 
   activeView: 'home',
   activeRoadmap: 'ai',
@@ -384,6 +408,14 @@ document.addEventListener('DOMContentLoaded', () => {
   renderAllSubsystems();
   renderRoadmapTimeline('ai');
   startOtpTimer();
+  updateUserUI();
+
+  // If already logged in, dismiss onboarding modal automatically
+  if (store.isLoggedIn) {
+    document.getElementById('onboarding-modal')?.classList.remove('active');
+  } else {
+    document.getElementById('onboarding-modal')?.classList.add('active');
+  }
 });
 
 // Switch Views
@@ -402,6 +434,69 @@ window.switchView = function(viewName) {
   }
 };
 
+// Synchronize all user UI elements across the application
+window.updateUserUI = function() {
+  const user = store.currentUser;
+  if (!user) return;
+
+  // Nav Avatar & Name
+  const navAvatar = document.getElementById('nav-user-avatar');
+  if (navAvatar && user.avatar) navAvatar.src = user.avatar;
+  
+  const navName = document.getElementById('nav-user-name');
+  if (navName && user.name) {
+    const firstName = user.name.split(' ')[0].toUpperCase();
+    navName.textContent = firstName;
+  }
+  
+  const xpDisplay = document.getElementById('user-xp-display');
+  if (xpDisplay) xpDisplay.textContent = `${(user.xp || 2450).toLocaleString()} XP`;
+
+  // Profile View Elements
+  const profName = document.getElementById('prof-name');
+  if (profName) profName.textContent = user.name || 'Student Builder';
+  
+  const profAvatar = document.querySelector('.profile-avatar-img');
+  if (profAvatar && user.avatar) profAvatar.src = user.avatar;
+  
+  const profCollegeLine = document.getElementById('prof-college-line');
+  if (profCollegeLine) {
+    profCollegeLine.textContent = `${user.college || 'CGC Landran'} • ${user.department || 'Computer Science'} • ${user.year || '3rd Year'}`;
+  }
+  
+  const profBio = document.getElementById('prof-bio');
+  if (profBio) profBio.textContent = user.bio || 'Passionate student builder. Shipping code & building real products.';
+  
+  const profXp = document.getElementById('prof-xp-val');
+  if (profXp) profXp.textContent = `${(user.xp || 2450).toLocaleString()}`;
+
+  // Skills chips in Profile
+  const skillsContainer = document.getElementById('prof-skills-container');
+  if (skillsContainer) {
+    const skillsList = Array.isArray(user.skills) && user.skills.length > 0
+      ? user.skills
+      : ['JavaScript', 'Python', 'React.js', 'Machine Learning'];
+    skillsContainer.innerHTML = skillsList.map(s => `<span class="skill-chip active">${s}</span>`).join('');
+  }
+
+  // Interests in Profile
+  const lookingContainer = document.getElementById('prof-looking-container');
+  if (lookingContainer) {
+    const interestsList = Array.isArray(user.interests) && user.interests.length > 0
+      ? user.interests
+      : ['AI / ML', 'Fullstack', 'Hackathons'];
+    lookingContainer.innerHTML = interestsList.map(item => `
+      <div class="bullet-item">🚀 <b>${item}</b> track & collaborations</div>
+    `).join('');
+  }
+
+  // Feed composer label
+  const pillRealName = document.getElementById('pill-real-name');
+  if (pillRealName && user.name) {
+    pillRealName.innerHTML = `<span>👤</span> Real Name (${user.name.split(' ')[0]})`;
+  }
+};
+
 // Onboarding State Machine
 window.goToOnboardingStep = function(stepNum) {
   store.onboardingStep = stepNum;
@@ -415,18 +510,163 @@ window.goToOnboardingStep = function(stepNum) {
   }
 };
 
+// Step 3: Login Handler
+window.handleLoginSubmit = function(e) {
+  if (e) e.preventDefault();
+  const emailInput = document.getElementById('login-email');
+  const email = emailInput ? emailInput.value.trim() : '';
+  if (!email) {
+    showToast('⚠️ Please enter your college email');
+    return;
+  }
+
+  // Derive readable name from email username
+  let derivedName = email.split('@')[0].replace(/[._-]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+  if (!derivedName) derivedName = 'Student Builder';
+
+  store.currentUser.email = email;
+  store.currentUser.name = derivedName;
+  store.currentUser.isVerified = true;
+  store.currentUser.avatar = `https://api.dicebear.com/7.x/identicon/svg?seed=${encodeURIComponent(derivedName)}`;
+  store.isLoggedIn = true;
+
+  localStorage.setItem('campushub_user', JSON.stringify(store.currentUser));
+  localStorage.setItem('campushub_logged_in', 'true');
+
+  updateUserUI();
+  document.getElementById('onboarding-modal')?.classList.remove('active');
+  showToast(`⚡ Welcome back, ${derivedName}! Logged in to your CampusHub account.`);
+  switchView('profile');
+};
+
+// Step 4: Verify Email Handler
+window.handleVerifyEmailSubmit = function(e) {
+  if (e) e.preventDefault();
+  const emailInput = document.getElementById('verify-email-input');
+  const email = emailInput ? emailInput.value.trim() : '';
+  if (!email) {
+    showToast('⚠️ Please enter a valid college email');
+    return;
+  }
+
+  store.tempRegistration.email = email;
+
+  // Auto-fill suggested name into Step 7
+  const derivedName = email.split('@')[0].replace(/[._-]/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+  if (derivedName) {
+    store.tempRegistration.name = derivedName;
+    const nameInput = document.getElementById('ob-student-name');
+    if (nameInput) nameInput.value = derivedName;
+  }
+
+  // Update OTP display
+  const otpDisplay = document.getElementById('otp-email-display');
+  if (otpDisplay) otpDisplay.textContent = email;
+
+  goToOnboardingStep(5);
+  showToast(`✉️ 6-digit verification code sent to ${email}`);
+};
+
+// Step 5: OTP Handler
+window.handleOtpSubmit = function(e) {
+  if (e) e.preventDefault();
+  goToOnboardingStep(6);
+  showToast('✓ College email verified! Select your campus node.');
+};
+
+// Step 6: Filter College list
+window.filterCollegeList = function(query) {
+  const items = document.querySelectorAll('#popular-colleges-list .college-item');
+  const q = (query || '').toLowerCase().trim();
+  items.forEach(item => {
+    const text = item.textContent.toLowerCase();
+    if (!q || text.includes(q)) {
+      item.style.display = 'flex';
+    } else {
+      item.style.display = 'none';
+    }
+  });
+  if (q) {
+    store.tempRegistration.college = query.trim();
+  }
+};
+
+// Step 7: Department & Name Handler
+window.handleDeptAndNameSubmit = function(e) {
+  if (e) e.preventDefault();
+  const nameInput = document.getElementById('ob-student-name');
+  const deptSelect = document.getElementById('ob-dept-select');
+  const yearSelect = document.getElementById('ob-year-select');
+
+  if (nameInput && nameInput.value.trim()) {
+    store.tempRegistration.name = nameInput.value.trim();
+  }
+  if (deptSelect) {
+    store.tempRegistration.department = deptSelect.value;
+  }
+  if (yearSelect) {
+    store.tempRegistration.year = yearSelect.value;
+  }
+
+  goToOnboardingStep(8);
+};
+
+// Step 8: Finish Registration & Launch Dashboard
 window.finishOnboarding = function() {
-  document.getElementById('onboarding-modal').classList.remove('active');
-  showToast('⚡ Welcome to CampusHub! Your builder dashboard is unlocked.');
+  const activeChips = Array.from(document.querySelectorAll('#interests-chips-container .interest-chip.active'))
+    .map(c => c.dataset.interest || c.textContent.trim());
+
+  const temp = store.tempRegistration;
+  const finalName = temp.name || store.currentUser.name || 'Student Builder';
+  const finalEmail = temp.email || store.currentUser.email || 'student@college.edu';
+  const finalCollege = temp.college || store.currentUser.college || 'CGC Landran';
+  const finalDept = temp.department || 'Computer Science & Engineering';
+  const finalYear = temp.year || '3rd Year';
+
+  const avatarUrl = `https://api.dicebear.com/7.x/identicon/svg?seed=${encodeURIComponent(finalName)}`;
+
+  store.currentUser = {
+    ...store.currentUser,
+    name: finalName,
+    email: finalEmail,
+    college: finalCollege,
+    department: finalDept,
+    year: finalYear,
+    interests: activeChips.length > 0 ? activeChips : ['AI / ML', 'Fullstack', 'Hackathons'],
+    skills: activeChips.length > 0 ? activeChips : ['Python', 'JavaScript', 'React.js'],
+    isVerified: true,
+    avatar: avatarUrl
+  };
+
+  store.isLoggedIn = true;
+  localStorage.setItem('campushub_user', JSON.stringify(store.currentUser));
+  localStorage.setItem('campushub_logged_in', 'true');
+
+  updateUserUI();
+  document.getElementById('onboarding-modal')?.classList.remove('active');
+  showToast(`🎉 Welcome to CampusHub, ${finalName}! Your student profile is verified.`);
+  switchView('profile');
+};
+
+// Logout / Switch Account
+window.logoutUser = function() {
+  localStorage.removeItem('campushub_user');
+  localStorage.removeItem('campushub_logged_in');
+  store.isLoggedIn = false;
+  store.currentUser = { ...defaultUser };
+  updateUserUI();
+  goToOnboardingStep(2);
+  document.getElementById('onboarding-modal')?.classList.add('active');
+  showToast('👋 Logged out. Log in or create a new student account.');
 };
 
 window.openOnboardingModal = function() {
   goToOnboardingStep(1);
-  document.getElementById('onboarding-modal').classList.add('active');
+  document.getElementById('onboarding-modal')?.classList.add('active');
 };
 
 document.getElementById('skip-onboarding-btn')?.addEventListener('click', () => {
-  document.getElementById('onboarding-modal').classList.remove('active');
+  document.getElementById('onboarding-modal')?.classList.remove('active');
   showToast('⚡ Switched to live CampusHub builder view!');
 });
 
@@ -1034,21 +1274,46 @@ window.handleCreatePostSubmit = function(e) {
 
 window.openCreateMenuModal = function() { openModal('create-menu-modal'); };
 window.openEditProfileModal = function() {
-  document.getElementById('edit-prof-name').value = store.currentUser.name;
-  document.getElementById('edit-prof-college').value = store.currentUser.college;
-  document.getElementById('edit-prof-bio').value = store.currentUser.bio;
+  const user = store.currentUser;
+  const nameEl = document.getElementById('edit-prof-name');
+  const collegeEl = document.getElementById('edit-prof-college');
+  const deptEl = document.getElementById('edit-prof-dept');
+  const yearEl = document.getElementById('edit-prof-year');
+  const skillsEl = document.getElementById('edit-prof-skills');
+  const bioEl = document.getElementById('edit-prof-bio');
+
+  if (nameEl) nameEl.value = user.name || '';
+  if (collegeEl) collegeEl.value = user.college || '';
+  if (deptEl) deptEl.value = user.department || 'Computer Science Engineering';
+  if (yearEl) yearEl.value = user.year || '3rd Year';
+  if (skillsEl) skillsEl.value = Array.isArray(user.skills) ? user.skills.join(', ') : 'Python, React.js';
+  if (bioEl) bioEl.value = user.bio || '';
+
   openModal('edit-profile-modal');
 };
 
 window.handleProfileUpdateSubmit = function(e) {
   e.preventDefault();
-  store.currentUser.name = document.getElementById('edit-prof-name').value;
-  store.currentUser.college = document.getElementById('edit-prof-college').value;
-  store.currentUser.bio = document.getElementById('edit-prof-bio').value;
+  const nameVal = document.getElementById('edit-prof-name')?.value.trim();
+  const collegeVal = document.getElementById('edit-prof-college')?.value.trim();
+  const deptVal = document.getElementById('edit-prof-dept')?.value.trim();
+  const yearVal = document.getElementById('edit-prof-year')?.value.trim();
+  const skillsVal = document.getElementById('edit-prof-skills')?.value.trim();
+  const bioVal = document.getElementById('edit-prof-bio')?.value.trim();
+
+  if (nameVal) store.currentUser.name = nameVal;
+  if (collegeVal) store.currentUser.college = collegeVal;
+  if (deptVal) store.currentUser.department = deptVal;
+  if (yearVal) store.currentUser.year = yearVal;
+  if (bioVal) store.currentUser.bio = bioVal;
+  if (skillsVal) {
+    store.currentUser.skills = skillsVal.split(',').map(s => s.trim()).filter(Boolean);
+  }
+
+  localStorage.setItem('campushub_user', JSON.stringify(store.currentUser));
+  updateUserUI();
   closeModal('edit-profile-modal');
-  document.getElementById('prof-name').textContent = store.currentUser.name;
-  document.getElementById('prof-bio').textContent = store.currentUser.bio;
-  showToast('Profile updated!');
+  showToast('✓ Profile updated successfully!');
 };
 
 function setupEventListeners() {
