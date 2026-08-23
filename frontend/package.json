@@ -1,0 +1,14 @@
+{
+  "name": "campus-hub-frontend",
+  "version": "1.0.0",
+  "description": "CampusHub — Frontend Client (Not Your College Style UI)",
+  "main": "app.js",
+  "scripts": {
+    "start": "serve -l 3000",
+    "dev": "serve -l 3000",
+    "serve": "serve -l 3000"
+  },
+  "devDependencies": {
+    "serve": "^14.2.4"
+  }
+}

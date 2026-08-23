@@ -1,23 +1,22 @@
 {
-  "name": "campus-hub",
-  "version": "2.6.4",
-  "description": "Campus Hub — Systems & Terminal OS Subsystem for Academic Clusters and Student Repositories",
-  "main": "app.js",
+  "name": "campus-hub-workspace",
+  "version": "2.0.0",
+  "description": "CampusHub — Student-Only Collaboration Platform (Decoupled Frontend & Backend Architecture)",
   "scripts": {
-    "start": "serve -l 3000",
-    "dev": "serve -l 3000",
-    "serve": "serve -l 3000",
-    "build": "echo \"[BUILD] Pure static architecture. No compilation step required.\""
+    "start": "npm --prefix backend start",
+    "dev": "npm --prefix backend run dev",
+    "dev:backend": "npm --prefix backend run dev",
+    "start:backend": "npm --prefix backend start",
+    "dev:frontend": "npm --prefix frontend start",
+    "start:frontend": "npm --prefix frontend start",
+    "install:all": "npm install && npm --prefix backend install && npm --prefix frontend install"
   },
   "keywords": [
     "campus-hub",
-    "terminal-ui",
-    "systems-aesthetic",
-    "developer-console"
+    "student-network",
+    "not-your-college",
+    "full-stack"
   ],
-  "author": "Campus Hub Consortium",
-  "license": "MIT",
-  "devDependencies": {
-    "serve": "^14.2.4"
-  }
+  "author": "CampusHub Team",
+  "license": "MIT"
 }
