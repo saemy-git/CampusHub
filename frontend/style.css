@@ -2173,6 +2173,28 @@ h1, h2, h3, h4, h5, h6, .splash-title, .page-title, .modal-title, .matrix-title,
   margin-top: 0.25rem;
 }
 
+/* OTP Banner & Simulation */
+.otp-sim-banner {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--nyc-surface);
+  border: 1.5px dashed var(--nyc-border);
+  padding: 0.45rem 0.85rem;
+  border-radius: var(--nyc-radius-md);
+  margin-bottom: 0.5rem;
+}
+
+.otp-code-pill {
+  background: var(--nyc-yellow);
+  color: var(--nyc-text-primary);
+  padding: 0.15rem 0.6rem;
+  border-radius: var(--nyc-radius-sm);
+  border: 1px solid var(--nyc-border);
+  font-size: 1.1rem;
+  letter-spacing: 2px;
+}
+
 /* OTP Boxes */
 .otp-boxes-grid {
   display: flex;

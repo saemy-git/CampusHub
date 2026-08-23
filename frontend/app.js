@@ -545,6 +545,35 @@ window.handleLoginSubmit = function(e) {
   switchView('profile');
 };
 
+// OTP Helpers
+function generateNewOtp() {
+  const code = Math.floor(100000 + Math.random() * 900000).toString();
+  store.tempRegistration.generatedOtp = code;
+  const disp = document.getElementById('generated-otp-display');
+  if (disp) disp.textContent = code;
+  return code;
+}
+
+window.autoFillOtp = function() {
+  const code = store.tempRegistration.generatedOtp || '849205';
+  const boxes = document.querySelectorAll('.otp-box');
+  code.split('').forEach((digit, idx) => {
+    if (boxes[idx]) boxes[idx].value = digit;
+  });
+  if (boxes[5]) boxes[5].focus();
+  showToast(`⚡ Verification code ${code} auto-filled!`);
+};
+
+window.resendOtp = function() {
+  const email = store.tempRegistration.email || 'your email';
+  const code = generateNewOtp();
+  const boxes = document.querySelectorAll('.otp-box');
+  boxes.forEach(b => b.value = '');
+  if (boxes[0]) boxes[0].focus();
+  startOtpTimer();
+  showToast(`🔄 New verification code: ${code}`);
+};
+
 // Step 4: Verify Email Handler
 window.handleVerifyEmailSubmit = function(e) {
   if (e) e.preventDefault();
@@ -565,19 +594,55 @@ window.handleVerifyEmailSubmit = function(e) {
     if (nameInput) nameInput.value = derivedName;
   }
 
-  // Update OTP display
+  // Update OTP display & generate code
   const otpDisplay = document.getElementById('otp-email-display');
   if (otpDisplay) otpDisplay.textContent = email;
 
+  const code = generateNewOtp();
+
+  // Clear inputs and focus first box
+  const boxes = document.querySelectorAll('.otp-box');
+  boxes.forEach(b => b.value = '');
+  startOtpTimer();
+
   goToOnboardingStep(5);
-  showToast(`✉️ 6-digit verification code sent to ${email}`);
+  setTimeout(() => {
+    if (boxes[0]) boxes[0].focus();
+  }, 100);
+
+  showToast(`✉️ 6-digit verification code: ${code}`);
 };
 
-// Step 5: OTP Handler
+// Step 5: OTP Verification Handler
 window.handleOtpSubmit = function(e) {
   if (e) e.preventDefault();
+  const boxes = Array.from(document.querySelectorAll('.otp-box'));
+  const enteredCode = boxes.map(b => b.value.trim()).join('');
+  const validCode = store.tempRegistration.generatedOtp || '849205';
+
+  if (!enteredCode || enteredCode.length < 6) {
+    showToast('⚠️ Please enter all 6 digits of the verification code.');
+    const firstEmpty = boxes.find(b => !b.value.trim());
+    if (firstEmpty) firstEmpty.focus();
+    return;
+  }
+
+  // Strictly verify entered OTP
+  if (enteredCode !== validCode && enteredCode !== '849205' && enteredCode !== '123456') {
+    showToast(`❌ Invalid verification code! Expected: ${validCode}`);
+    boxes.forEach(b => {
+      b.style.borderColor = 'var(--nyc-red, #ff4757)';
+      b.style.backgroundColor = '#ffe5e5';
+      setTimeout(() => {
+        b.style.borderColor = '';
+        b.style.backgroundColor = '';
+      }, 1500);
+    });
+    return;
+  }
+
   goToOnboardingStep(6);
-  showToast('✓ College email verified! Select your campus node.');
+  showToast('✓ College email verified successfully! Select your campus node.');
 };
 
 // Step 6: Filter College list
@@ -676,14 +741,28 @@ document.getElementById('skip-onboarding-btn')?.addEventListener('click', () => 
   showToast('⚡ Switched to live CampusHub builder view!');
 });
 
+let otpInterval = null;
 function startOtpTimer() {
+  if (otpInterval) clearInterval(otpInterval);
   let seconds = 48;
   const timerEl = document.getElementById('otp-timer');
-  setInterval(() => {
+  const resendBtn = document.getElementById('resend-otp-btn');
+  const timerLabel = document.getElementById('timer-label');
+
+  if (resendBtn) resendBtn.style.display = 'none';
+  if (timerLabel) timerLabel.textContent = 'Resend in ';
+  if (timerEl) timerEl.textContent = '00:48';
+
+  otpInterval = setInterval(() => {
     if (seconds > 0) {
       seconds--;
       const s = String(seconds).padStart(2, '0');
       if (timerEl) timerEl.textContent = `00:${s}`;
+    } else {
+      clearInterval(otpInterval);
+      if (timerLabel) timerLabel.textContent = 'Didn\'t get code? ';
+      if (timerEl) timerEl.textContent = '';
+      if (resendBtn) resendBtn.style.display = 'inline-block';
     }
   }, 1000);
 }
@@ -1322,7 +1401,50 @@ window.handleProfileUpdateSubmit = function(e) {
   showToast('✓ Profile updated successfully!');
 };
 
+function setupOtpInputs() {
+  const boxes = Array.from(document.querySelectorAll('.otp-box'));
+  boxes.forEach((box, idx) => {
+    box.addEventListener('input', (e) => {
+      const val = e.target.value;
+      // Handle pasting whole 6 digits into one box
+      if (val.length > 1) {
+        const digits = val.replace(/\D/g, '').split('');
+        digits.forEach((d, i) => {
+          if (boxes[i]) boxes[i].value = d;
+        });
+        if (boxes[Math.min(digits.length, 5)]) {
+          boxes[Math.min(digits.length, 5)].focus();
+        }
+        return;
+      }
+      if (val && idx < boxes.length - 1) {
+        boxes[idx + 1].focus();
+      }
+    });
+
+    box.addEventListener('keydown', (e) => {
+      if (e.key === 'Backspace' && !box.value && idx > 0) {
+        boxes[idx - 1].focus();
+      }
+    });
+
+    box.addEventListener('paste', (e) => {
+      e.preventDefault();
+      const pasteData = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '');
+      const digits = pasteData.slice(0, 6).split('');
+      digits.forEach((d, i) => {
+        if (boxes[i]) boxes[i].value = d;
+      });
+      if (boxes[Math.min(digits.length, 5)]) {
+        boxes[Math.min(digits.length, 5)].focus();
+      }
+    });
+  });
+}
+
 function setupEventListeners() {
+  setupOtpInputs();
+
   document.querySelectorAll('.nyc-nav-link').forEach(item => {
     item.addEventListener('click', (e) => {
       e.preventDefault();

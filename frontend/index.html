@@ -130,19 +130,26 @@
           <h2 class="step-heading">Enter Verification Code</h2>
           <p class="step-subheading">Sent to <b id="otp-email-display">your email</b></p>
           
-          <form class="onboarding-form" onsubmit="handleOtpSubmit(event)">
-            <div class="otp-boxes-grid mt-4">
-              <input type="text" maxlength="1" class="otp-box" value="8" autofocus>
-              <input type="text" maxlength="1" class="otp-box" value="4">
-              <input type="text" maxlength="1" class="otp-box" value="9">
-              <input type="text" maxlength="1" class="otp-box" value="2">
-              <input type="text" maxlength="1" class="otp-box" value="0">
-              <input type="text" maxlength="1" class="otp-box" value="5">
+          <div class="otp-sim-banner mt-3" id="otp-sim-banner">
+            <span class="text-xs text-muted">Verification Code:</span>
+            <span class="otp-code-pill font-mono font-bold" id="generated-otp-display">849205</span>
+            <button type="button" class="btn btn-sm btn-nyc-outline py-1 px-2 text-xs ml-2" onclick="autoFillOtp()">⚡ Auto-fill</button>
+          </div>
+
+          <form class="onboarding-form mt-2" id="otp-form" onsubmit="handleOtpSubmit(event)">
+            <div class="otp-boxes-grid mt-3" id="otp-boxes-container">
+              <input type="text" maxlength="1" class="otp-box" inputmode="numeric" autocomplete="one-time-code" autofocus>
+              <input type="text" maxlength="1" class="otp-box" inputmode="numeric">
+              <input type="text" maxlength="1" class="otp-box" inputmode="numeric">
+              <input type="text" maxlength="1" class="otp-box" inputmode="numeric">
+              <input type="text" maxlength="1" class="otp-box" inputmode="numeric">
+              <input type="text" maxlength="1" class="otp-box" inputmode="numeric">
             </div>
 
             <div class="resend-row mt-4">
-              <span class="text-muted text-sm">Resend in </span>
+              <span class="text-muted text-sm" id="timer-label">Resend in </span>
               <span class="timer-badge" id="otp-timer">00:48</span>
+              <button type="button" class="link-text text-sm font-bold ml-2" id="resend-otp-btn" style="display: none; background: none; border: none; cursor: pointer; text-decoration: underline;" onclick="resendOtp()">Resend Code 🔄</button>
             </div>
 
             <button type="submit" class="btn btn-nyc-primary w-full mt-4">
