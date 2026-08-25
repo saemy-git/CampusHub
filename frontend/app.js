@@ -3,10 +3,27 @@
  * High-octane, zero-dependency ES6 application logic.
  */
 
+/**
+ * CAMPUSHUB API CONFIGURATION
+ * Configures the backend REST API endpoint for Localhost, GitHub Pages, and Render.
+ * Set window.CAMPUSHUB_API_URL or update PROD_URL with your Render backend URL.
+ */
 const API_CONFIG = {
-  BASE_URL: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-    ? (window.location.port === '3000' ? 'http://localhost:5000/api' : '/api')
-    : '/api'
+  // ⚡ Change this to your deployed Render URL once created:
+  PROD_URL: 'https://campushub-backend.onrender.com/api',
+
+  get BASE_URL() {
+    if (typeof window !== 'undefined' && window.CAMPUSHUB_API_URL) {
+      return window.CAMPUSHUB_API_URL.replace(/\/+$/, '');
+    }
+    if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+      return window.location.port === '3000' ? 'http://localhost:5000/api' : '/api';
+    }
+    if (typeof window !== 'undefined' && window.location.hostname.endsWith('github.io')) {
+      return this.PROD_URL.replace(/\/+$/, '');
+    }
+    return '/api';
+  }
 };
 
 /**

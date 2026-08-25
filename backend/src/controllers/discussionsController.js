@@ -1,23 +1,23 @@
 const db = require('../../../database/db');
 
-exports.getDiscussions = (req, res, next) => {
+exports.getDiscussions = async (req, res, next) => {
   try {
     const { category } = req.query;
-    const discussions = db.getDiscussions(category || 'all');
+    const discussions = await db.getDiscussions(category || 'all');
     res.json({ success: true, count: discussions.length, data: discussions });
   } catch (error) {
     next(error);
   }
 };
 
-exports.createDiscussion = (req, res, next) => {
+exports.createDiscussion = async (req, res, next) => {
   try {
     const { content, category, isAnon, tags, author, dept, avatar } = req.body;
     if (!content) {
       return res.status(400).json({ success: false, message: 'Content is required' });
     }
 
-    const newPost = db.createDiscussion({
+    const newPost = await db.createDiscussion({
       content,
       category,
       isAnon,
@@ -33,9 +33,9 @@ exports.createDiscussion = (req, res, next) => {
   }
 };
 
-exports.toggleLike = (req, res, next) => {
+exports.toggleLike = async (req, res, next) => {
   try {
-    const result = db.toggleLikeDiscussion(req.params.id);
+    const result = await db.toggleLikeDiscussion(req.params.id);
     if (!result) {
       return res.status(404).json({ success: false, message: 'Post not found' });
     }

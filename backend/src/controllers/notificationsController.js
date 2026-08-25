@@ -1,8 +1,8 @@
 const db = require('../../../database/db');
 
-exports.getNotifications = (req, res, next) => {
+exports.getNotifications = async (req, res, next) => {
   try {
-    const notifications = db.getNotifications();
+    const notifications = await db.getNotifications();
     const unreadCount = notifications.filter(n => n.unread).length;
     res.json({ success: true, unreadCount, data: notifications });
   } catch (error) {
@@ -10,9 +10,9 @@ exports.getNotifications = (req, res, next) => {
   }
 };
 
-exports.markAllAsRead = (req, res, next) => {
+exports.markAllAsRead = async (req, res, next) => {
   try {
-    const result = db.markAllNotificationsRead();
+    const result = await db.markAllNotificationsRead();
     res.json(result);
   } catch (error) {
     next(error);

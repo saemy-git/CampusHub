@@ -7,7 +7,7 @@ const jwt = require('jsonwebtoken');
 const config = require('../config/config');
 const db = require('../../../database/db');
 
-function requireAuth(req, res, next) {
+async function requireAuth(req, res, next) {
   let token = null;
 
   // 1. Check HttpOnly Cookie
@@ -36,10 +36,10 @@ function requireAuth(req, res, next) {
     // Look up fresh user record from database
     let user = null;
     if (decoded.id) {
-      user = db.getUser(decoded.id);
+      user = await db.getUser(decoded.id);
     }
     if (!user && decoded.email) {
-      user = db.getUserByEmail(decoded.email);
+      user = await db.getUserByEmail(decoded.email);
     }
 
     if (!user) {
@@ -66,7 +66,7 @@ function requireAuth(req, res, next) {
   }
 }
 
-function optionalAuth(req, res, next) {
+async function optionalAuth(req, res, next) {
   let token = null;
   if (req.cookies && req.cookies.campushub_token) {
     token = req.cookies.campushub_token;
@@ -80,7 +80,7 @@ function optionalAuth(req, res, next) {
   if (token) {
     try {
       const decoded = jwt.verify(token, config.JWT_SECRET);
-      const user = decoded.id ? db.getUser(decoded.id) : (decoded.email ? db.getUserByEmail(decoded.email) : null);
+      const user = decoded.id ? await db.getUser(decoded.id) : (decoded.email ? await db.getUserByEmail(decoded.email) : null);
       if (user) req.user = user;
     } catch (e) {
       // Ignored for optional auth

@@ -1,18 +1,18 @@
 const db = require('../../../database/db');
 
-exports.getTeams = (req, res, next) => {
+exports.getTeams = async (req, res, next) => {
   try {
     const { role, search } = req.query;
-    const teams = db.getTeams(role || 'all', search || '');
+    const teams = await db.getTeams(role || 'all', search || '');
     res.json({ success: true, count: teams.length, data: teams });
   } catch (error) {
     next(error);
   }
 };
 
-exports.getTeamById = (req, res, next) => {
+exports.getTeamById = async (req, res, next) => {
   try {
-    const team = db.getTeamById(req.params.id);
+    const team = await db.getTeamById(req.params.id);
     if (!team) {
       return res.status(404).json({ success: false, message: 'Team not found' });
     }
@@ -22,18 +22,18 @@ exports.getTeamById = (req, res, next) => {
   }
 };
 
-exports.createTeam = (req, res, next) => {
+exports.createTeam = async (req, res, next) => {
   try {
-    const newTeam = db.createTeam(req.body);
+    const newTeam = await db.createTeam(req.body);
     res.status(201).json({ success: true, message: 'Squad created successfully', data: newTeam });
   } catch (error) {
     next(error);
   }
 };
 
-exports.applyToTeam = (req, res, next) => {
+exports.applyToTeam = async (req, res, next) => {
   try {
-    const result = db.applyToTeam(req.params.id, req.body);
+    const result = await db.applyToTeam(req.params.id, req.body);
     res.json(result);
   } catch (error) {
     next(error);

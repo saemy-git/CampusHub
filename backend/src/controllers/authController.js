@@ -27,9 +27,9 @@ exports.sendOtp = async (req, res, next) => {
     const normalizedEmail = email.toLowerCase().trim();
 
     // Check resend cooldown
-    const existingOtp = db.getActiveOtp(normalizedEmail);
-    if (existingOtp && Date.now() - existingOtp.last_sent_at < config.OTP_COOLDOWN_MS) {
-      const waitSeconds = Math.ceil((config.OTP_COOLDOWN_MS - (Date.now() - existingOtp.last_sent_at)) / 1000);
+    const existingOtp = await db.getActiveOtp(normalizedEmail);
+    if (existingOtp && Date.now() - Number(existingOtp.last_sent_at) < config.OTP_COOLDOWN_MS) {
+      const waitSeconds = Math.ceil((config.OTP_COOLDOWN_MS - (Date.now() - Number(existingOtp.last_sent_at))) / 1000);
       return res.status(429).json({
         success: false,
         message: `Please wait ${waitSeconds}s before requesting another code.`,
@@ -42,8 +42,8 @@ exports.sendOtp = async (req, res, next) => {
     const otpHash = otpService.hashOtp(otp, normalizedEmail);
     const expiresAt = Date.now() + config.OTP_EXPIRY_MS;
 
-    // Persist hashed OTP to SQLite database
-    db.saveEmailOtp(normalizedEmail, otpHash, expiresAt, Date.now());
+    // Persist hashed OTP to database
+    await db.saveEmailOtp(normalizedEmail, otpHash, expiresAt, Date.now());
 
     // Dispatch transactional email (or log in local dev mode)
     await emailService.sendOtpEmail(normalizedEmail, otp);
@@ -84,7 +84,7 @@ exports.verifyOtp = async (req, res, next) => {
     const cleanOtp = otp.trim();
 
     // Retrieve active OTP record
-    const otpRecord = db.getActiveOtp(normalizedEmail);
+    const otpRecord = await db.getActiveOtp(normalizedEmail);
     if (!otpRecord) {
       return res.status(400).json({
         success: false,
@@ -93,8 +93,8 @@ exports.verifyOtp = async (req, res, next) => {
     }
 
     // Check expiration
-    if (Date.now() > otpRecord.expires_at) {
-      db.deleteEmailOtp(normalizedEmail);
+    if (Date.now() > Number(otpRecord.expires_at)) {
+      await db.deleteEmailOtp(normalizedEmail);
       return res.status(400).json({
         success: false,
         message: 'This verification code has expired. Please request a new one.'
@@ -103,7 +103,7 @@ exports.verifyOtp = async (req, res, next) => {
 
     // Check maximum attempts
     if (otpRecord.attempts >= config.OTP_MAX_ATTEMPTS) {
-      db.deleteEmailOtp(normalizedEmail);
+      await db.deleteEmailOtp(normalizedEmail);
       return res.status(429).json({
         success: false,
         message: 'Too many incorrect attempts. Please request a new code.'
@@ -113,10 +113,10 @@ exports.verifyOtp = async (req, res, next) => {
     // Verify OTP Hash timing-safely
     const isValid = otpService.verifyOtpHash(cleanOtp, normalizedEmail, otpRecord.otp_hash);
     if (!isValid) {
-      db.incrementOtpAttempts(normalizedEmail);
+      await db.incrementOtpAttempts(normalizedEmail);
       const remaining = config.OTP_MAX_ATTEMPTS - (otpRecord.attempts + 1);
       if (remaining <= 0) {
-        db.deleteEmailOtp(normalizedEmail);
+        await db.deleteEmailOtp(normalizedEmail);
         return res.status(429).json({
           success: false,
           message: 'Too many incorrect attempts. Please request a new code.'
@@ -129,17 +129,17 @@ exports.verifyOtp = async (req, res, next) => {
     }
 
     // Invalidate OTP immediately upon successful verification
-    db.deleteEmailOtp(normalizedEmail);
+    await db.deleteEmailOtp(normalizedEmail);
 
     // Create or retrieve user from database
-    let user = db.getUserByEmail(normalizedEmail);
+    let user = await db.getUserByEmail(normalizedEmail);
     if (!user) {
-      user = db.createOrUpdateUser({
+      user = await db.createOrUpdateUser({
         email: normalizedEmail,
         isVerified: true
       });
     } else if (!user.isVerified) {
-      user = db.updateUser(user.id, { isVerified: true });
+      user = await db.updateUser(user.id, { isVerified: true });
     }
 
     // Sign JWT Authentication Token
@@ -153,7 +153,7 @@ exports.verifyOtp = async (req, res, next) => {
     res.cookie('campushub_token', token, {
       httpOnly: true,
       secure: config.NODE_ENV === 'production',
-      sameSite: config.NODE_ENV === 'production' ? 'strict' : 'lax',
+      sameSite: config.NODE_ENV === 'production' ? 'none' : 'lax',
       maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
     });
 
@@ -206,7 +206,7 @@ exports.logout = (req, res) => {
   res.clearCookie('campushub_token', {
     httpOnly: true,
     secure: config.NODE_ENV === 'production',
-    sameSite: config.NODE_ENV === 'production' ? 'strict' : 'lax'
+    sameSite: config.NODE_ENV === 'production' ? 'none' : 'lax'
   });
   return res.json({
     success: true,
@@ -217,10 +217,10 @@ exports.logout = (req, res) => {
 /**
  * GET /api/auth/profile
  */
-exports.getProfile = (req, res, next) => {
+exports.getProfile = async (req, res, next) => {
   try {
     const userId = req.user ? req.user.id : 'user-01';
-    const user = db.getUser(userId);
+    const user = await db.getUser(userId);
     if (!user) {
       return res.status(404).json({ success: false, message: 'User not found.' });
     }
@@ -234,10 +234,10 @@ exports.getProfile = (req, res, next) => {
  * PUT /api/auth/profile or POST /api/users/profile
  * Updates authenticated student's profile information
  */
-exports.updateProfile = (req, res, next) => {
+exports.updateProfile = async (req, res, next) => {
   try {
     const userId = req.user ? req.user.id : 'user-01';
-    const updated = db.updateUser(userId, req.body);
+    const updated = await db.updateUser(userId, req.body);
     return res.json({
       success: true,
       message: 'Profile updated successfully.',

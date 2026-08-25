@@ -14,6 +14,7 @@ module.exports = {
   PORT: process.env.PORT || 5000,
   NODE_ENV: process.env.NODE_ENV || 'development',
   FRONTEND_ORIGIN: process.env.FRONTEND_ORIGIN || '*',
+  DATABASE_URL: process.env.DATABASE_URL || '',
   DB_PATH: path.join(__dirname, '..', '..', '..', 'database', 'campus_hub.db'),
 
   // JWT Configuration
